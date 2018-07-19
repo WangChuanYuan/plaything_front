@@ -5,6 +5,12 @@
 </template>
 
 <script>
+  // 富文本编辑器
+  import '../../static/UE/ueditor.config'
+  import '../../static/UE/ueditor.all.min'
+  import '../../static/UE/lang/zh-cn/zh-cn'
+  import '../../static/UE/ueditor.parse.min'
+
   export default {
     name: 'UE',
     data () {
