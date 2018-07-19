@@ -10,9 +10,11 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
+    //设置proxyTable只能解决本地dev的跨域访问问题
     proxyTable: {
       "/api": {
         target: "http://localhost:8080", //调用后台url
+        changeOrigin: true,
         pathRewrite: {"^/api" : ""}
       }
     },
