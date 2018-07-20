@@ -1,10 +1,12 @@
 <template>
-
+  <Navigation></Navigation>
 </template>
 
 <script>
+    import Navigation from "../../components/Navigation";
     export default {
-        name: "index"
+      name: "index",
+      components: {Navigation}
     }
 </script>
 

@@ -1,13 +1,17 @@
 <template>
   <div>
+    <Navigation></Navigation>
     <tag-cloud id="tagCloud" :data="hotTag" @clickTag="clickTagItem"></tag-cloud>
   </div>
 </template>
 
 <script>
+  import Navigation from "../../components/Navigation";
+
   export default {
     name: "register",
-    data: function() {
+    components: {Navigation},
+    data: function () {
       return {
         hotTag: [
           {"name": "美食"},
@@ -22,7 +26,7 @@
           {"name": "传统"},
           {"name": "地标"},
           {"name": "音乐"}
-          ]
+        ]
       }
     },
     methods: {
@@ -34,8 +38,8 @@
 </script>
 
 <style scoped>
-#tagCloud {
-  top: 50px;
-  margin: 3px 0px 10px 180px;
-}
+  #tagCloud {
+    top: 50px;
+    margin: 3px 0px 10px 180px;
+  }
 </style>
