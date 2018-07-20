@@ -13,7 +13,7 @@
 
   export default {
     name: 'UE',
-    data () {
+    data() {
       return {
         editor: null
       }
