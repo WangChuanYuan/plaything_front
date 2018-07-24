@@ -17,7 +17,10 @@
         </el-submenu>
       </div>
       <div class="login" v-else>
-        <el-menu-item index="6" style="font-size: large">登录</el-menu-item>
+        <el-submenu index="6">
+          <el-menu-item index="6-1" style="font-size: large">登录</el-menu-item>
+          <el-menu-item index="6-2" style="font-size: large">注册</el-menu-item>
+        </el-submenu>
       </div>
     </el-menu>
   </div>
@@ -29,12 +32,13 @@
     data() {
       return {
         activeIndex: '1',
-        usr: "1"
+        usr: false,
+        imgURL: require('../assets/defaultDisplay.jpg')
       };
     },
     methods: {
       handleSelect(key, keyPath) {
-        switch (key){
+        switch (key) {
           case "1":
             window.location.href = "./";
             this.activeIndex = "1";
@@ -56,12 +60,16 @@
             this.activeIndex = "5-1";
             break;
           case "5-2":
-            window.location.href = "./register.html";
+            window.location.href = "./";
             this.activeIndex = "5-2";
             break;
-          case "6":
+          case "6-1":
             window.location.href = "./";
-            this.activeIndex = "6";
+            this.activeIndex = "6-1";
+            break;
+          case "6-2":
+            window.location.href = "./register.html";
+            this.activeIndex = "6-2";
             break;
         }
       }
@@ -78,10 +86,14 @@
     margin-top: 3px;
     color: #ff1627;
   }
+
   .login {
     float: right;
   }
+
   #usrImg {
-    border-radius: 120px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
   }
 </style>
