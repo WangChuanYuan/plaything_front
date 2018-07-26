@@ -5,7 +5,7 @@
         <Navigation></Navigation>
       </el-header>
       <el-main>
-        <el-carousel trigger="click" height="600px" interval="5000">
+        <el-carousel trigger="click" height="600px" :interval="5000">
           <el-carousel-item v-for="item in imgs" :key="item">
             <img :src="item" style="width: 100%; height: inherit"/>
           </el-carousel-item>

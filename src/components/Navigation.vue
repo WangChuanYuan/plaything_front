@@ -13,7 +13,8 @@
             <img id="usrImg" v-bind:src="imgURL"/>
           </template>
           <el-menu-item index="5-1" style="font-size: large">我的信息</el-menu-item>
-          <el-menu-item index="5-2" style="font-size: large">登出</el-menu-item>
+          <el-menu-item index="5-2" style="font-size: large">发布</el-menu-item>
+          <el-menu-item index="5-3" style="font-size: large">登出</el-menu-item>
         </el-submenu>
       </div>
       <div class="login" v-else>
@@ -62,6 +63,10 @@
           case "5-2":
             window.location.href = "./";
             this.activeIndex = "5-2";
+            break;
+          case "5-3":
+            window.location.href = "./";
+            this.activeIndex = "5-3";
             break;
           case "6-1":
             window.location.href = "./";
