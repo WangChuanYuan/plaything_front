@@ -85,6 +85,7 @@
 <script>
   import Navigation from "../../components/Navigation";
   import Footer from "../../components/Footer";
+  import util from  '../../assets/util.js'
   import $ from 'jquery';
 
   export default {
@@ -128,20 +129,7 @@
           checkPassword: [{required: true, validator: checkPasswordRule, trigger: 'blur'}]
         },
         displayURL: require('../../assets/defaultDisplay.jpg'),
-        hotTag: [
-          {"name": "美食"},
-          {"name": "人文"},
-          {"name": "风景"},
-          {"name": "习俗"},
-          {"name": "手工"},
-          {"name": "文化"},
-          {"name": "服饰"},
-          {"name": "自然"},
-          {"name": "科技"},
-          {"name": "传统"},
-          {"name": "地标"},
-          {"name": "音乐"}
-        ],
+        hotTag: util.tags,
         option: {
           radius: 200,
           maxFont: 32
