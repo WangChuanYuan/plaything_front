@@ -159,7 +159,16 @@
               type: 'post',
               data: form,
               success: function (result) {
-
+                if (result == 'SUCCESS') {
+                  this.$message({
+                    message: '分享成功，等待审核',
+                    type: 'success'
+                  });
+                  window.location.href = './';
+                }
+                else {
+                  this.$message.error('分享失败');
+                }
               },
               error: function (error) {
 

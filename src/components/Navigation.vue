@@ -37,6 +37,20 @@
         imgURL: require('../assets/defaultDisplay.jpg')
       };
     },
+    mounted: function(){
+      $.ajax({
+        url:'/api/current_user',
+        dataType:'json',
+        type:'get',
+        scriptCharset:'utf-8',
+        success:function (data) {
+          this.usr = data;
+          this.imgURL = this.usr.display;
+        },
+        error:function (error) {
+        }
+      });
+    },
     methods: {
       handleSelect(key, keyPath) {
         switch (key) {
@@ -65,8 +79,7 @@
             this.activeIndex = "5-2";
             break;
           case "5-3":
-            window.location.href = "./";
-            this.activeIndex = "5-3";
+            this.logout();
             break;
           case "6-1":
             window.location.href = "./";
@@ -77,6 +90,23 @@
             this.activeIndex = "6-2";
             break;
         }
+      },
+      logout(){
+        this.$confirm('确认退出?', '提示', {
+        }).then(() => {
+          $.ajax({
+            url:'/api/logout',
+            type:'post',
+            scriptCharset: 'utf-8',
+            dataType:'json',
+            success:function (data) {
+            },
+            error:function (error) {
+            }
+          });
+          window.location.href='/login.html';
+        }).catch(() => {
+        });
       }
     }
   }

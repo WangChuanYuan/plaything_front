@@ -99,6 +99,7 @@
         mode: 'read', //默认为浏览模式
         checkResult: 'fail', //审核模式下的审查状态，不通过，通过，加精
         post: {
+          id: '',
           covers: [require('../../assets/banner1.jpg'),
             require('../../assets/banner2.jpg'),
             require('../../assets/banner3.jpg')],
@@ -132,7 +133,7 @@
         ], //最近几篇发帖
       }
     },
-    mounted: function () {
+    created: function () {
       //初始化页面，从url中得到要显示的文章编号
       this.init();
     },
@@ -141,6 +142,44 @@
         var mode = util.getParameter('mode');
         if (mode)
           this.mode = mode;
+        var postID = util.getParameter('postID');
+        $.ajax({
+          url: '/api/get_post',
+          dataType:'json',
+          type:'get',
+          scriptCharset: 'utf-8',
+          async: false,
+          data: {"postID": postID},
+          success: function (data) {
+            this.post = data;
+          },
+          error: function (error) {
+          }
+        });
+        $.ajax({
+          url: '/api/get_recent_posts',
+          dataType:'json',
+          type:'get',
+          scriptCharset: 'utf-8',
+          data: {"writer": this.post.writer},
+          success: function (data) {
+            this.recentPosts = data;
+          },
+          error: function (error) {
+          }
+        });
+        $.ajax({
+          url: '/api/get_user',
+          dataType:'json',
+          type:'get',
+          scriptCharset: 'utf-8',
+          data: {"writer": this.post.writer},
+          success: function (data) {
+            this.writer = data;
+          },
+          error: function (error) {
+          }
+        });
         $('#content').append(this.post.content);
       },
       //点击缩略图更改轮播图显示
@@ -153,7 +192,19 @@
       },
       //审核
       check(){
-
+        $.ajax({
+          url:'/api/check_post',
+          dataType:'json',
+          type:'post',
+          scriptCharset: 'utf-8',
+          data: {"checkResult": this.checkResult, "postID": this.post.id},
+          success: function (data) {
+            if (data == 'SUCCESS')
+              this.$message("审核成功");
+          },
+          error: function (error) {
+          }
+        })
       }
     }
   }
