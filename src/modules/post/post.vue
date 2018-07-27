@@ -7,17 +7,17 @@
       <el-container>
         <el-main>
           <!--主要区域内容-->
-          <!--封面，包含封面图，标签，标题-->
+          <!--封面，包含封面图，标签，可能有价格-->
           <div id="cover">
             <el-carousel ref="carousel" trigger="click" height="530px" :interval="5000" style="width: 500px">
-              <el-carousel-item v-for="pic in post.pics" :key="pic" name="index">
-                <img :src="pic" style="margin-left:10%; width: 80%; height: inherit"/>
+              <el-carousel-item v-for="cover in post.covers" :key="cover" name="index">
+                <img :src=cover style="margin-left:10%; width: 80%; height: inherit"/>
               </el-carousel-item>
             </el-carousel>
             <div>
               <el-row>
-                <el-col :span="4" v-for="(pic,index) in post.pics" :key="pic">
-                  <img :src="pic" @click="changeCarousel(index)" class="thumbnail"/>
+                <el-col :span="4" v-for="(cover,index) in post.covers" :key="cover">
+                  <img :src="cover" @click="changeCarousel(index)" class="thumbnail"/>
                 </el-col>
               </el-row>
             </div>
@@ -26,11 +26,12 @@
                       v-for="tag in post.tags">
                 {{tag}}
               </el-tag>
-              <h1 style="text-align: center">{{post.title}}</h1>
             </div>
+            <h2 v-if="post.type == 'sell'" style="color: red">{{post.price}}￥</h2>
           </div>
           <!--正文内容用jQuery追加html代码-->
           <div id="article">
+            <h1 style="text-align: center">{{post.title}}</h1>
             <div id="content" style="word-break: break-all"></div>
             <!--浏览模式下显示留言板，审批模式下显示审批选项-->
             <hr/>
@@ -95,14 +96,16 @@
     components: {UE, Navigation},
     data() {
       return {
-        mode: 'check', //默认为浏览模式
+        mode: 'read', //默认为浏览模式
         checkResult: 'fail', //审核模式下的审查状态，不通过，通过，加精
         post: {
-          pics: [require('../../assets/banner1.jpg'),
+          covers: [require('../../assets/banner1.jpg'),
             require('../../assets/banner2.jpg'),
             require('../../assets/banner3.jpg')],
           tags: ['美食', '风景', '手艺'],
           title: '疯了疯了疯了',
+          type: 'share',
+          price: 0,
           content: '<p>哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈' +
           '哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈' +
           '哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈' +
@@ -127,13 +130,6 @@
             content: ''
           }
         ], //最近几篇发帖
-        editorConfig: {
-          elementPathEnabled: false,
-          wordCount: false,
-          enableContextMenu: false,
-          initialFrameWidth: 300,
-          autoHeightEnabled: true
-        }
       }
     },
     mounted: function () {
@@ -171,7 +167,7 @@
   }
 
   #article {
-    top: 780px;
+    top: 800px;
     left: 400px;
     width: 500px;
     position: absolute;
