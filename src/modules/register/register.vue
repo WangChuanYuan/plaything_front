@@ -20,7 +20,7 @@
           <el-form-item id="uploader">
             <!--上传头像，此处只是添加，最后注册时上传至服务器 multiple 表示是否支持多选文件-->
             <el-upload class="avatar-uploader" action="mock" :multiple="false" :auto-upload="false"
-                       :on-change="addDisplay">
+                       :on-change="addDisplay" :accept="'image/*'">
               <img v-if="displayURL" :src="displayURL" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-table"></i>
             </el-upload>

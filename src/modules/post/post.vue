@@ -88,6 +88,7 @@
   import Navigation from "../../components/Navigation";
   import $ from 'jquery';
   import UE from "../../components/UE";
+  import util from '../../assets/util.js';
 
   export default {
     name: "post",
@@ -141,6 +142,9 @@
     },
     methods: {
       init() {
+        var mode = util.getParameter('mode');
+        if (mode)
+          this.mode = mode;
         $('#content').append(this.post.content);
       },
       //点击缩略图更改轮播图显示
