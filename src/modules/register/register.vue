@@ -20,7 +20,7 @@
           <el-form-item id="uploader">
             <!--上传头像，此处只是添加，最后注册时上传至服务器 multiple 表示是否支持多选文件-->
             <el-upload class="avatar-uploader" action="mock" :multiple="false" :auto-upload="false"
-                       :on-change="addDisplay">
+                       :on-change="addDisplay" :accept="'image/*'">
               <img v-if="displayURL" :src="displayURL" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-table"></i>
             </el-upload>
@@ -85,6 +85,7 @@
 <script>
   import Navigation from "../../components/Navigation";
   import Footer from "../../components/Footer";
+  import util from  '../../assets/util.js'
   import $ from 'jquery';
 
   export default {
@@ -128,20 +129,7 @@
           checkPassword: [{required: true, validator: checkPasswordRule, trigger: 'blur'}]
         },
         displayURL: require('../../assets/defaultDisplay.jpg'),
-        hotTag: [
-          {"name": "美食"},
-          {"name": "人文"},
-          {"name": "风景"},
-          {"name": "习俗"},
-          {"name": "手工"},
-          {"name": "文化"},
-          {"name": "服饰"},
-          {"name": "自然"},
-          {"name": "科技"},
-          {"name": "传统"},
-          {"name": "地标"},
-          {"name": "音乐"}
-        ],
+        hotTag: util.tags,
         option: {
           radius: 200,
           maxFont: 32
@@ -154,10 +142,24 @@
         console.log(this.registerForm);
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            let model = this.registerForm;
+            let form = new FormData();
+            form.append("userName", model.userName);
+            form.append("password", model.password);
+            form.append("avatar", model.avatar);
+            form.append("location", model.location);
+            form.append("mail", model.mail);
+            form.append("phone", model.phone);
+            for (var i = 0; i < model.tags.length; i++)
+              form.append("tags", model.tags[i]);
             $.ajax({
               url: '/api/register',
-              type: 'post',
-              data: this.registerForm,
+              processData:false,
+              cache:false,
+              contentType:false,
+              dataType:'json',
+              type:'post',
+              data: form,
               success: function (data) {
                 if (data == 'SUCCESS') {
                   this.$message.success('注册成功');
@@ -165,11 +167,11 @@
                   window.location.href = '/';
                 }
                 else {
-                  this.$message.error("用户名已被注册")
+                  this.$message.error("用户名已被注册");
                 }
               },
               error: function (error) {
-                this.$message.error("错误")
+                this.$message.error("错误");
               }
             })
           } else {
