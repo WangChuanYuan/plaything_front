@@ -9,17 +9,22 @@
           <!--主要区域内容-->
           <!--封面，包含封面图，标签，可能有价格-->
           <div id="cover">
-            <el-carousel ref="carousel" trigger="click" height="530px" :interval="5000" style="width: 500px">
-              <el-carousel-item v-for="cover in post.covers" :key="cover" name="index">
-                <img :src=cover style="margin-left:10%; width: 80%; height: inherit"/>
-              </el-carousel-item>
-            </el-carousel>
-            <div>
-              <el-row>
-                <el-col :span="4" v-for="(cover,index) in post.covers" :key="cover">
-                  <img :src="cover" @click="changeCarousel(index)" class="thumbnail"/>
-                </el-col>
-              </el-row>
+            <div v-if="this.post.fileType == 'pic'">
+              <el-carousel ref="carousel" trigger="click" height="530px" :interval="5000" style="width: 500px">
+                <el-carousel-item v-for="cover in post.covers" :key="cover" name="index">
+                  <img :src=cover style="margin-left:10%; width: 80%; height: inherit"/>
+                </el-carousel-item>
+              </el-carousel>
+              <div>
+                <el-row>
+                  <el-col :span="4" v-for="(cover,index) in post.covers" :key="cover">
+                    <img :src="cover" @click="changeCarousel(index)" class="thumbnail"/>
+                  </el-col>
+                </el-row>
+              </div>
+            </div>
+            <div v-else>
+              <video :src="this.post.video"></video>
             </div>
             <div>
               <el-tag style="margin: 5px; border-color: #565656; color: #565656" color="white" size="medium" :key="tag"
@@ -31,8 +36,8 @@
           </div>
           <!--正文内容用jQuery追加html代码-->
           <div id="article">
-            <h1 style="text-align: center">{{post.title}}</h1>
-            <div id="content" style="word-break: break-all"></div>
+            <h3 style="text-align: center">{{post.title}}</h3>
+            <div id="content" class="square" style="word-break: break-all"></div>
             <!--浏览模式下显示留言板，审批模式下显示审批选项-->
             <hr/>
             <div v-show="mode == 'check'">
@@ -51,7 +56,7 @@
         <el-aside width="600px">
           <!--侧边栏内容，固定在右侧-->
           <div id="writerInfo">
-            <div class="square">
+            <div class="square" style="width: 320px">
               <div style="text-align: center">
                 <label style="font-size: 20px; font-family: KaiTi">作者</label>
               </div>
@@ -63,7 +68,7 @@
             </div>
           </div>
           <div id="recentPosts">
-            <div class="square">
+            <div class="square" style="width: 320px">
               <div style="text-align: center">
                 <label style="font-size: 20px; font-family: KaiTi">与他相关</label>
               </div>
@@ -103,9 +108,11 @@
           covers: [require('../../assets/banner1.jpg'),
             require('../../assets/banner2.jpg'),
             require('../../assets/banner3.jpg')],
+          video: require('../../assets/功夫熊猫(国英双语) Kung.Fu.Panda.2008.BluRay.720p.x264.AC3-WOFEI_2016121920132_1.mp4'),
           tags: ['美食', '风景', '手艺'],
           title: '疯了疯了疯了',
           type: 'share',
+          fileType: 'video',
           price: 0,
           content: '<p>哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈' +
           '哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈' +
@@ -133,7 +140,7 @@
         ], //最近几篇发帖
       }
     },
-    created: function () {
+    mounted: function () {
       //初始化页面，从url中得到要显示的文章编号
       this.init();
     },
@@ -145,8 +152,8 @@
         var postID = util.getParameter('postID');
         $.ajax({
           url: '/api/get_post',
-          dataType:'json',
-          type:'get',
+          dataType: 'json',
+          type: 'get',
           scriptCharset: 'utf-8',
           async: false,
           data: {"postID": postID},
@@ -158,8 +165,8 @@
         });
         $.ajax({
           url: '/api/get_recent_posts',
-          dataType:'json',
-          type:'get',
+          dataType: 'json',
+          type: 'get',
           scriptCharset: 'utf-8',
           data: {"writer": this.post.writer},
           success: function (data) {
@@ -170,10 +177,10 @@
         });
         $.ajax({
           url: '/api/get_user',
-          dataType:'json',
-          type:'get',
+          dataType: 'json',
+          type: 'get',
           scriptCharset: 'utf-8',
-          data: {"writer": this.post.writer},
+          data: {"user": this.post.writer},
           success: function (data) {
             this.writer = data;
           },
@@ -191,11 +198,11 @@
         alert(this.recentPosts[index].title);
       },
       //审核
-      check(){
+      check() {
         $.ajax({
-          url:'/api/check_post',
-          dataType:'json',
-          type:'post',
+          url: '/api/check_post',
+          dataType: 'json',
+          type: 'post',
           scriptCharset: 'utf-8',
           data: {"checkResult": this.checkResult, "postID": this.post.id},
           success: function (data) {
@@ -213,13 +220,13 @@
 <style scoped>
   #cover {
     top: 100px;
-    left: 400px;
+    left: 300px;
     position: absolute;
   }
 
   #article {
     top: 800px;
-    left: 400px;
+    left: 300px;
     width: 500px;
     position: absolute;
   }
@@ -247,7 +254,6 @@
   }
 
   .square {
-    width: 320px;
     border: 1px solid #c1bcb9;
     border-radius: 12px;
   }

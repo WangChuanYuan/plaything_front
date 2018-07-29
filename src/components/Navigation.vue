@@ -45,7 +45,8 @@
         scriptCharset:'utf-8',
         success:function (data) {
           this.usr = data;
-          this.imgURL = this.usr.display;
+          if(this.usr.display)
+            this.imgURL = this.usr.display;
         },
         error:function (error) {
         }

@@ -15,10 +15,16 @@
               </el-radio-group>
             </el-form-item>
           </div>
-          <!--封面图上传-->
+          <!--封面图/视频上传-->
           <div id="uploader">
-            <h5>上传封面图</h5>
-            <el-form-item prop="covers">
+            <el-tooltip effect="light" content="可选择上传最多五张图片或上传一段视频"><h5>封面信息</h5></el-tooltip>
+            <el-form-item prop="fileType">
+              <el-radio-group v-model="postForm.fileType">
+                <el-radio label="pic">上传图片</el-radio>
+                <el-radio label="video">上传视频</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item v-show="postForm.fileType == 'pic'" prop="covers">
               <el-upload action="mock" :on-preview="handlePictureCardPreview" :on-remove="removeCover"
                          :auto-upload="false" :limit="5" :accept="'image/*'" list-type="picture-card" required
                          :on-change="addCover" :on-exceed="handleExceed">
@@ -28,6 +34,13 @@
               <el-dialog :visible.sync="dialogVisible">
                 <img width="100%" :src="dialogImageUrl" alt="">
               </el-dialog>
+            </el-form-item>
+            <el-form-item v-show="postForm.fileType == 'video'" prop="video">
+              <el-upload action="mock" :auto-upload="false" :limit="1" accept=".mp4" :on-exceed="handleExceed"
+                         :on-change="addVideo" :on-remove="removeVideo">
+                <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                <div slot="tip" class="el-upload__tip">只能上传一段视频文件，格式为mp4</div>
+              </el-upload>
             </el-form-item>
           </div>
           <!--标签选择-->
@@ -42,7 +55,7 @@
           <div v-else class="tags">
             <h5>为商品添加合适的标签</h5>
             <el-form-item prop="tags">
-              <el-checkbox-group v-model="postForm.tags">
+              <el-checkbox-group v-model="postForm.goods">
                 <el-checkbox v-for="good in goods" :label="good.name"></el-checkbox>
               </el-checkbox-group>
             </el-form-item>
@@ -109,7 +122,10 @@
         postForm: {
           title: '',
           covers: [],
+          video: null,
+          fileType: 'pic',
           tags: [],
+          goods: [],
           price: 0,
           type: 'share',
           content: '',
@@ -123,7 +139,9 @@
         this.dialogVisible = true;
       },
       handleExceed(file, fileList) {
-        this.$message.warning('当前限制选择 5 个图片');
+        if (this.postForm.fileType == 'pic')
+          this.$message.warning('当前限制选择 5 个图片');
+        else this.$message.warning('当前限制选择1个视频');
       },
       addCover(file, fileList) {
         this.postForm.covers.push(file.raw);
@@ -134,6 +152,12 @@
             this.postForm.covers.splice(i, 1);
         }
       },
+      addVideo(file, fileList) {
+        this.postForm.video = file.raw;
+      },
+      removeVideo(file, fileList) {
+        this.postForm.video = null;
+      },
       sharePost(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
@@ -141,10 +165,22 @@
             let form = new FormData();
             model.content = this.$refs.editor.getUEContent();
             form.append("title", model.title);
-            for (var i = 0; i < model.tags.length; i++)
-              form.append("tags", model.tags[i]);
-            for (var i = 0; i < model.covers.length; i++)
-              form.append("covers", model.covers[i]);
+
+            if (model.type == 'share') {
+              for (var i = 0; i < model.tags.length; i++)
+                form.append("tags", model.tags[i]);
+            }
+            else {
+              for (var i = 0; i < model.goods.length; i++)
+                form.append("tags", model.goods[i]);
+            }
+
+            if (model.fileType == 'pic')
+              for (var i = 0; i < model.covers.length; i++)
+                form.append("covers", model.covers[i]);
+            else form.append("video", model.video);
+
+            form.append("fileType", model.fileType);
             form.append("price", model.price);
             form.append("type", model.type);
             form.append("content", model.content);
@@ -180,7 +216,6 @@
           }
         })
       }
-
     }
   }
 </script>
@@ -189,13 +224,13 @@
   #type {
     position: absolute;
     left: 300px;
-    top: 100px;
+    top: 70px;
   }
 
   #uploader {
     position: absolute;
     left: 300px;
-    top: 150px;
+    top: 100px;
   }
 
   .tags {
