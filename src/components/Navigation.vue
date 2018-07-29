@@ -60,15 +60,15 @@
             this.activeIndex = "1";
             break;
           case "2":
-            window.location.href = "./";
+            window.location.href = "./community.html";
             this.activeIndex = "2";
             break;
           case "3":
-            window.location.href = "./";
+            window.location.href = "./recommendedArticle.html";
             this.activeIndex = "3";
             break;
           case "4":
-            window.location.href = "./";
+            window.location.href = "./mall.html";
             this.activeIndex = "4";
             break;
           case "5-1":

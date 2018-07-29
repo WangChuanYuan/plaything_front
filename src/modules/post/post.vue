@@ -24,7 +24,7 @@
               </div>
             </div>
             <div v-else>
-              <video :src="this.post.video"></video>
+              <video :src="this.post.video" controls="controls" height="600px" width="500px">您的浏览器不支持video</video>
             </div>
             <div>
               <el-tag style="margin: 5px; border-color: #565656; color: #565656" color="white" size="medium" :key="tag"
@@ -75,7 +75,11 @@
               <hr/>
               <div v-for="(post, index) in recentPosts">
                 <div style="margin-bottom: 10px">
-                  <img :src="post.covers[0]" class="display" style="vertical-align: middle"/>
+                  <img v-if="post.fileType == 'pic'" :src="post.covers[0]" class="display"
+                       style="vertical-align: middle"/>
+                  <video v-else :src="post.video" class="display" autoplay muted loop style="vertical-align: middle">
+                    您的浏览器不支持video
+                  </video>
                   <label class="linkText" style="font-size: 15px; margin-left: 10px" @click="readPost(index)">{{post.title}}</label>
                   <div style="position: relative; left: 260px; top: -25px">
                     <el-button icon="el-icon-star-on" circle></el-button>
@@ -108,11 +112,11 @@
           covers: [require('../../assets/banner1.jpg'),
             require('../../assets/banner2.jpg'),
             require('../../assets/banner3.jpg')],
-          video: require('../../assets/功夫熊猫(国英双语) Kung.Fu.Panda.2008.BluRay.720p.x264.AC3-WOFEI_2016121920132_1.mp4'),
+          video: null,
           tags: ['美食', '风景', '手艺'],
           title: '疯了疯了疯了',
           type: 'share',
-          fileType: 'video',
+          fileType: 'pic',
           price: 0,
           content: '<p>哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈' +
           '哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈' +
@@ -130,11 +134,14 @@
           {
             covers: [require('../../assets/banner1.jpg')],
             title: '推荐游玩地点&购物指南',
+            fileType: 'pic',
             content: ''
           },
           {
             covers: [require('../../assets/banner2.jpg')],
             title: '购物指南和购物指南',
+            video: null,
+            fileType: 'pic',
             content: ''
           }
         ], //最近几篇发帖
