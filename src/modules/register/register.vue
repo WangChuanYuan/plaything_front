@@ -85,7 +85,7 @@
 <script>
   import Navigation from "../../components/Navigation";
   import Footer from "../../components/Footer";
-  import util from  '../../assets/util.js'
+  import util from '../../assets/util.js'
   import $ from 'jquery';
 
   export default {
@@ -154,17 +154,21 @@
               form.append("tags", model.tags[i]);
             $.ajax({
               url: '/api/register',
-              processData:false,
-              cache:false,
-              contentType:false,
-              dataType:'json',
-              type:'post',
+              processData: false,
+              cache: false,
+              contentType: false,
+              dataType: 'json',
+              type: 'post',
               data: form,
               success: function (data) {
-                if (data == 'SUCCESS') {
-                  this.$message.success('注册成功');
-                  sessionStorage.setItem('user', JSON.stringify(this.registerForm.userName));
-                  window.location.href = '/';
+                if (data != 'FAILURE') {
+                  this.$alert('恭喜您注册成功，您的id为：' + data, '注册成功', {
+                    confirmButtonText: '确定',
+                    callback: action => {
+                      sessionStorage.setItem('user', JSON.stringify(this.registerForm.userName));
+                      window.location.href = '/';
+                    }
+                  });
                 }
                 else {
                   this.$message.error("用户名已被注册");

@@ -126,6 +126,7 @@
           '</p>',
         },
         writer: {
+          id : '123',
           userName: '王川源',
           phone: '12345567',
           display: require('../../assets/banner1.jpg')
@@ -154,6 +155,7 @@
     methods: {
       init() {
         var mode = util.getParameter('mode');
+        var type = util.getParameter('type');
         if (mode)
           this.mode = mode;
         var postID = util.getParameter('postID');
@@ -163,7 +165,7 @@
           type: 'get',
           scriptCharset: 'utf-8',
           async: false,
-          data: {"postID": postID},
+          data: {"postID": postID, "type": type},
           success: function (data) {
             this.post = data;
           },
