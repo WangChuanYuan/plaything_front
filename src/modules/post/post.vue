@@ -63,7 +63,7 @@
               <hr/>
               <img :src="writer.display" class="display" style="border-radius: 80px"/>
               <label style="vertical-align: top; margin-left: 50px">{{writer.userName}}</label>
-              <el-button icon="el-icon-message" circle></el-button>
+              <el-button icon="el-icon-message" circle @click="chatRoomVisible = true"></el-button>
               <el-button icon="el-icon-star-on" circle></el-button>
             </div>
           </div>
@@ -91,6 +91,9 @@
         </el-aside>
       </el-container>
     </el-container>
+    <el-dialog :visible.sync="chatRoomVisible" :width="'40%'">
+      <Talk :receiver-id="writer.id"></Talk>
+    </el-dialog>
   </div>
 </template>
 
@@ -99,12 +102,14 @@
   import $ from 'jquery';
   import UE from "../../components/UE";
   import util from '../../assets/util.js';
+  import Talk from "../../components/Talk";
 
   export default {
     name: "post",
-    components: {UE, Navigation},
+    components: {Talk, UE, Navigation},
     data() {
       return {
+        chatRoomVisible: false,
         mode: 'read', //默认为浏览模式
         checkResult: 'fail', //审核模式下的审查状态，不通过，通过，加精
         post: {
@@ -126,7 +131,7 @@
           '</p>',
         },
         writer: {
-          id : '123',
+          id: '123',
           userName: '王川源',
           phone: '12345567',
           display: require('../../assets/banner1.jpg')

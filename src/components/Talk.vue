@@ -27,14 +27,16 @@
 
   export default {
     name: "Talk",
+    props: {
+      receiverId: String,
+    },
     data() {
       return {
         //正与你进行聊天的用户
         otherId: 'M',
         otherName: 'M',
-        otherDisplay: require('../assets/banner2.jpg'),
+        otherDisplay: require('../assets/defaultDisplay.jpg'),
         myId: 'W',
-        myName: 'W',
         myDisplay: require('../assets/defaultDisplay.jpg'),
         content: '',
         //轮询获取新的消息
@@ -72,7 +74,37 @@
     },
     methods: {
       init() {
-        this.scrollToBottom();
+        $.ajax({
+          url: '/api/current_user',
+          dataType: 'json',
+          type: 'get',
+          scriptCharset: 'utf-8',
+          success: function (data) {
+            var user = data;
+            this.myId = user.id;
+            if (user.display)
+              this.myDisplay = user.display;
+          },
+          error: function (error) {
+          }
+        });
+        $.ajax({
+          url: '/api/get_user',
+          dataType: 'json',
+          type: 'get',
+          scriptCharset: 'utf-8',
+          contentType: "application/json",
+          data: JSON.stringify({"user": this.receiverId}),
+          success: function (data) {
+            var user = data;
+            this.otherId = user.id;
+            this.otherName = user.userName;
+            if (user.display)
+              this.otherDisplay = user.display;
+          },
+          error: function (error) {
+          }
+        });
         this.timer = setInterval(this.getNewMessage, 1000);
       },
       showTime(index) {
