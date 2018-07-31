@@ -1,28 +1,44 @@
 <template>
-  <div class="content-talk">
-    <ul>
-      <li class="clearfix" v-for="(talk,index) in talks"
-          v-bind:class="{'even':otherName!=talk.senderId,'odd':otherName==talk.senderId}">
-        <span style="text-align: center; display: block">{{talk.time}}</span>
-        <img v-bind:src="myDisplay" alt="" v-if="otherName!=talk.senderId">
-        <img v-bind:src="otherDisplay" alt="" v-else>
-        <div class="in_talk">
-          <p>{{talk.content}}</p>
-        </div>
-      </li>
-    </ul>
+  <div>
+    <h4 style="text-align: center">正与{{otherName}}通讯中</h4>
+    <hr/>
+    <div class="content-talk" id="scrollArea" style="height: 300px; overflow-y: scroll; overflow-x: auto">
+      <ul>
+        <li class="clearfix" v-for="(talk,index) in talks"
+            v-bind:class="{'even':otherId!=talk.senderId,'odd':otherId==talk.senderId}">
+          <span v-show="showTime(index)" :id="index" style="text-align: center; display: block">{{talk.time}}</span>
+          <img v-bind:src="myDisplay" alt="" v-if="otherId!=talk.senderId">
+          <img v-bind:src="otherDisplay" alt="" v-else>
+          <div class="in_talk">
+            <p>{{talk.content}}</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <form onkeydown="if(event.keyCode == 13) return false;">
+      <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="content" @keyup.native='sendMessage($event)'>
+      </el-input>
+    </form>
   </div>
 </template>
 
 <script>
+  import $ from 'jquery';
+
   export default {
     name: "Talk",
     data() {
       return {
         //正与你进行聊天的用户
+        otherId: 'M',
         otherName: 'M',
-        myDisplay: require('../assets/defaultDisplay.jpg'),
         otherDisplay: require('../assets/banner2.jpg'),
+        myId: 'W',
+        myName: 'W',
+        myDisplay: require('../assets/defaultDisplay.jpg'),
+        content: '',
+        //轮询获取新的消息
+        timer: null,
         talks: [
           {
             senderId: 'W',
@@ -45,7 +61,72 @@
         ]
       }
     },
-    methods: {}
+    mounted() {
+      this.init();
+    },
+    beforeDestroy() {
+      clearInterval(this.timer);
+    },
+    updated() {
+      this.scrollToBottom();
+    },
+    methods: {
+      init() {
+        this.scrollToBottom();
+        this.timer = setInterval(this.getNewMessage, 1000);
+      },
+      showTime(index) {
+        //上一次发送时间1分钟以内的不再显示发送时间
+        if (index > 0) {
+          var sendTime = new Date(this.talks[index].time);
+          sendTime.setMinutes(sendTime.getMinutes() + 1);
+          var lastSendTime = new Date(this.talks[index - 1].time);
+          return sendTime <= lastSendTime;
+        }
+        return true;
+      },
+      scrollToBottom() {
+        $('#scrollArea').scrollTop($('#scrollArea')[0].scrollHeight);
+      },
+      getNewMessage() {
+        $.ajax({
+          url: '/api/get_chat',
+          dataType: 'json',
+          type: 'get',
+          contentType: "application/json",
+          data: JSON.stringify({"chatterOne": this.myId, "chatterTwo": this.otherId}),
+          success: function (data) {
+            this.talks = data;
+          },
+          error: function () {
+          }
+        });
+      },
+      sendMessage(ev) {
+        if (ev.keyCode == 13) {
+          if (this.content.length == 0)
+            this.$message('说点什么吧');
+          else {
+            var receiverId = this.otherId;
+            var content = this.content;
+            $.ajax({
+              url: '/api/send_privateMessage',
+              dataType: 'json',
+              type: 'post',
+              contentType: "application/json",
+              data: JSON.stringify({"receiverId": receiverId, "content": content}),
+              success: function (data) {
+                if (data == 'SUCCESS') {
+                  this.content = '';
+                }
+              },
+              error: function () {
+              }
+            });
+          }
+        }
+      }
+    }
   }
 </script>
 

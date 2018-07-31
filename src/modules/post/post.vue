@@ -165,7 +165,8 @@
           type: 'get',
           scriptCharset: 'utf-8',
           async: false,
-          data: {"postID": postID, "type": type},
+          contentType: "application/json",
+          data: JSON.stringify({"postID": postID, "type": type}),
           success: function (data) {
             this.post = data;
           },
@@ -177,7 +178,8 @@
           dataType: 'json',
           type: 'get',
           scriptCharset: 'utf-8',
-          data: {"writer": this.post.writer},
+          contentType: "application/json",
+          data: JSON.stringify({"writer": this.post.writer}),
           success: function (data) {
             this.recentPosts = data;
           },
@@ -189,7 +191,8 @@
           dataType: 'json',
           type: 'get',
           scriptCharset: 'utf-8',
-          data: {"user": this.post.writer},
+          contentType: "application/json",
+          data: JSON.stringify({"user": this.post.writer}),
           success: function (data) {
             this.writer = data;
           },
@@ -213,7 +216,8 @@
           dataType: 'json',
           type: 'post',
           scriptCharset: 'utf-8',
-          data: {"checkResult": this.checkResult, "postID": this.post.id},
+          contentType: "application/json",
+          data: JSON.stringify({"checkResult": this.checkResult, "postID": this.post.id}),
           success: function (data) {
             if (data == 'SUCCESS')
               this.$message("审核成功");
