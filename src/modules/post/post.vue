@@ -103,6 +103,7 @@
   import UE from "../../components/UE";
   import util from '../../assets/util.js';
   import Talk from "../../components/Talk";
+  import ajaxHelper from '../../assets/ajaxHelper';
 
   export default {
     name: "post",
@@ -164,45 +165,54 @@
         if (mode)
           this.mode = mode;
         var postID = util.getParameter('postID');
-        $.ajax({
-          url: '/api/get_post',
-          dataType: 'json',
-          type: 'get',
-          scriptCharset: 'utf-8',
-          async: false,
-          contentType: "application/json",
-          data: JSON.stringify({"postID": postID, "type": type}),
-          success: function (data) {
-            this.post = data;
-          },
-          error: function (error) {
-          }
+        // $.ajax({
+        //   url: '/api/get_post',
+        //   dataType: 'json',
+        //   type: 'get',
+        //   scriptCharset: 'utf-8',
+        //   async: false,
+        //   contentType: "application/json",
+        //   data: JSON.stringify({"postID": postID, "type": type}),
+        //   success: function (data) {
+        //     this.post = data;
+        //   },
+        //   error: function (error) {
+        //   }
+        // });
+        ajaxHelper.getPostByIdAndType({"postID": postID, "type": type}).then((data) => {
+          this.post = data;
         });
-        $.ajax({
-          url: '/api/get_recent_posts',
-          dataType: 'json',
-          type: 'get',
-          scriptCharset: 'utf-8',
-          contentType: "application/json",
-          data: JSON.stringify({"writer": this.post.writer}),
-          success: function (data) {
-            this.recentPosts = data;
-          },
-          error: function (error) {
-          }
+        // $.ajax({
+        //   url: '/api/get_recent_posts',
+        //   dataType: 'json',
+        //   type: 'get',
+        //   scriptCharset: 'utf-8',
+        //   contentType: "application/json",
+        //   data: JSON.stringify({"writer": this.post.writer}),
+        //   success: function (data) {
+        //     this.recentPosts = data;
+        //   },
+        //   error: function (error) {
+        //   }
+        // });
+        ajaxHelper.getRecentPostsByWriter({"writer": this.post.writer}).then((data) => {
+          this.recentPosts = data;
         });
-        $.ajax({
-          url: '/api/get_user',
-          dataType: 'json',
-          type: 'get',
-          scriptCharset: 'utf-8',
-          contentType: "application/json",
-          data: JSON.stringify({"user": this.post.writer}),
-          success: function (data) {
-            this.writer = data;
-          },
-          error: function (error) {
-          }
+        // $.ajax({
+        //   url: '/api/get_user',
+        //   dataType: 'json',
+        //   type: 'get',
+        //   scriptCharset: 'utf-8',
+        //   contentType: "application/json",
+        //   data: JSON.stringify({"user": this.post.writer}),
+        //   success: function (data) {
+        //     this.writer = data;
+        //   },
+        //   error: function (error) {
+        //   }
+        // });
+        ajaxHelper.getUserById({"user": this.post.writer}).then((data) => {
+          this.writer = data;
         });
         $('#content').append(this.post.content);
       },
@@ -216,20 +226,24 @@
       },
       //审核
       check() {
-        $.ajax({
-          url: '/api/check_post',
-          dataType: 'json',
-          type: 'post',
-          scriptCharset: 'utf-8',
-          contentType: "application/json",
-          data: JSON.stringify({"checkResult": this.checkResult, "postID": this.post.id}),
-          success: function (data) {
-            if (data == 'SUCCESS')
-              this.$message("审核成功");
-          },
-          error: function (error) {
-          }
-        })
+        // $.ajax({
+        //   url: '/api/check_post',
+        //   dataType: 'json',
+        //   type: 'post',
+        //   scriptCharset: 'utf-8',
+        //   contentType: "application/json",
+        //   data: JSON.stringify({"checkResult": this.checkResult, "postID": this.post.id}),
+        //   success: function (data) {
+        //     if (data == 'SUCCESS')
+        //       this.$message("审核成功");
+        //   },
+        //   error: function (error) {
+        //   }
+        // });
+        ajaxHelper.checkPost({"checkResult": this.checkResult, "postID": this.post.id}).then((data) => {
+          if (data == 'SUCCESS')
+            this.$message("审核成功");
+        });
       }
     }
   }

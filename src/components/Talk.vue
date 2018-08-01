@@ -24,6 +24,7 @@
 
 <script>
   import $ from 'jquery';
+  import ajaxHelper from '../assets/ajaxHelper';
 
   export default {
     name: "Talk",
@@ -74,36 +75,49 @@
     },
     methods: {
       init() {
-        $.ajax({
-          url: '/api/current_user',
-          dataType: 'json',
-          type: 'get',
-          scriptCharset: 'utf-8',
-          success: function (data) {
-            var user = data;
-            this.myId = user.id;
-            if (user.display)
-              this.myDisplay = user.display;
-          },
-          error: function (error) {
-          }
+        // $.ajax({
+        //   url: '/api/current_user',
+        //   dataType: 'json',
+        //   type: 'get',
+        //   scriptCharset: 'utf-8',
+        //   success: function (data) {
+        //     var user = data;
+        //     this.myId = user.id;
+        //     if (user.display)
+        //       this.myDisplay = user.display;
+        //   },
+        //   error: function (error) {
+        //   }
+        // });
+        ajaxHelper.getCurrentUser().then((data) => {
+          var user = data;
+          this.myId = user.id;
+          if (user.display)
+            this.myDisplay = user.display;
         });
-        $.ajax({
-          url: '/api/get_user',
-          dataType: 'json',
-          type: 'get',
-          scriptCharset: 'utf-8',
-          contentType: "application/json",
-          data: JSON.stringify({"user": this.receiverId}),
-          success: function (data) {
-            var user = data;
-            this.otherId = user.id;
-            this.otherName = user.userName;
-            if (user.display)
-              this.otherDisplay = user.display;
-          },
-          error: function (error) {
-          }
+        // $.ajax({
+        //   url: '/api/get_user',
+        //   dataType: 'json',
+        //   type: 'get',
+        //   scriptCharset: 'utf-8',
+        //   contentType: "application/json",
+        //   data: JSON.stringify({"user": this.receiverId}),
+        //   success: function (data) {
+        //     var user = data;
+        //     this.otherId = user.id;
+        //     this.otherName = user.userName;
+        //     if (user.display)
+        //       this.otherDisplay = user.display;
+        //   },
+        //   error: function (error) {
+        //   }
+        // });
+        ajaxHelper.getUserById({"user": this.receiverId}).then((data) => {
+          var user = data;
+          this.otherId = user.id;
+          this.otherName = user.userName;
+          if (user.display)
+            this.otherDisplay = user.display;
         });
         this.timer = setInterval(this.getNewMessage, 1000);
       },
@@ -121,17 +135,20 @@
         $('#scrollArea').scrollTop($('#scrollArea')[0].scrollHeight);
       },
       getNewMessage() {
-        $.ajax({
-          url: '/api/get_chat',
-          dataType: 'json',
-          type: 'get',
-          contentType: "application/json",
-          data: JSON.stringify({"chatterOne": this.myId, "chatterTwo": this.otherId}),
-          success: function (data) {
-            this.talks = data;
-          },
-          error: function () {
-          }
+        // $.ajax({
+        //   url: '/api/get_chat',
+        //   dataType: 'json',
+        //   type: 'get',
+        //   contentType: "application/json",
+        //   data: JSON.stringify({"chatterOne": this.myId, "chatterTwo": this.otherId}),
+        //   success: function (data) {
+        //     this.talks = data;
+        //   },
+        //   error: function () {
+        //   }
+        // });
+        ajaxHelper.getChatBetween({"chatterOne": this.myId, "chatterTwo": this.otherId}).then((data) => {
+          this.talks = data;
         });
       },
       sendMessage(ev) {
@@ -141,30 +158,37 @@
           else {
             var receiverId = this.otherId;
             var content = this.content;
-            $.ajax({
-              url: '/api/send_privateMessage',
-              dataType: 'json',
-              type: 'post',
-              contentType: "application/json",
-              data: JSON.stringify({"receiverId": receiverId, "content": content}),
-              success: function (data) {
-                if (data == 'SUCCESS') {
-                  this.content = '';
-                }
-              },
-              error: function () {
+            // $.ajax({
+            //   url: '/api/send_privateMessage',
+            //   dataType: 'json',
+            //   type: 'post',
+            //   contentType: "application/json",
+            //   data: JSON.stringify({"receiverId": receiverId, "content": content}),
+            //   success: function (data) {
+            //     if (data == 'SUCCESS') {
+            //       this.content = '';
+            //     }
+            //   },
+            //   error: function () {
+            //   }
+            // });
+            ajaxHelper.sendPrivateMessage({"receiverId": receiverId, "content": content}).then((data) => {
+              if (data == 'SUCCESS') {
+                this.content = '';
               }
-            });
-            $.ajax({
-              url: '/api/read_private_message',
-              dataType: 'json',
-              type: 'post',
-              contentType: "application/json",
-              data: JSON.stringify({"senderId": this.otherId}),
-              success: function (data) {
-              },
-              error: function () {
-              }
+            })
+            // $.ajax({
+            //   url: '/api/read_private_message',
+            //   dataType: 'json',
+            //   type: 'post',
+            //   contentType: "application/json",
+            //   data: JSON.stringify({"senderId": this.otherId}),
+            //   success: function (data) {
+            //   },
+            //   error: function () {
+            //   }
+            // });
+            ajaxHelper.readPrivateMessage({"senderId": this.otherId}).then((data) => {
             });
           }
         }
