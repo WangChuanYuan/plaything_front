@@ -155,6 +155,17 @@
               error: function () {
               }
             });
+            $.ajax({
+              url: '/api/read_private_message',
+              dataType: 'json',
+              type: 'post',
+              contentType: "application/json",
+              data: JSON.stringify({"senderId": this.otherId}),
+              success: function (data) {
+              },
+              error: function () {
+              }
+            });
           }
         }
       }

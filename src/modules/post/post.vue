@@ -91,7 +91,7 @@
         </el-aside>
       </el-container>
     </el-container>
-    <el-dialog :visible.sync="chatRoomVisible" :width="'40%'">
+    <el-dialog :visible.sync="chatRoomVisible" width="30%">
       <Talk :receiver-id="writer.id"></Talk>
     </el-dialog>
   </div>
