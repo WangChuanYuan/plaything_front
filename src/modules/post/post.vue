@@ -63,7 +63,7 @@
               <hr/>
               <img :src="writer.display" class="display" style="border-radius: 80px"/>
               <label style="vertical-align: top; margin-left: 50px">{{writer.userName}}</label>
-              <el-button icon="el-icon-message" circle></el-button>
+              <el-button icon="el-icon-message" circle @click="chatRoomVisible = true"></el-button>
               <el-button icon="el-icon-star-on" circle></el-button>
             </div>
           </div>
@@ -91,6 +91,9 @@
         </el-aside>
       </el-container>
     </el-container>
+    <el-dialog :visible.sync="chatRoomVisible" :width="'40%'">
+      <Talk :receiver-id="writer.id"></Talk>
+    </el-dialog>
   </div>
 </template>
 
@@ -99,12 +102,14 @@
   import $ from 'jquery';
   import UE from "../../components/UE";
   import util from '../../assets/util.js';
+  import Talk from "../../components/Talk";
 
   export default {
     name: "post",
-    components: {UE, Navigation},
+    components: {Talk, UE, Navigation},
     data() {
       return {
+        chatRoomVisible: false,
         mode: 'read', //默认为浏览模式
         checkResult: 'fail', //审核模式下的审查状态，不通过，通过，加精
         post: {
@@ -126,6 +131,7 @@
           '</p>',
         },
         writer: {
+          id: '123',
           userName: '王川源',
           phone: '12345567',
           display: require('../../assets/banner1.jpg')
@@ -154,6 +160,7 @@
     methods: {
       init() {
         var mode = util.getParameter('mode');
+        var type = util.getParameter('type');
         if (mode)
           this.mode = mode;
         var postID = util.getParameter('postID');
@@ -163,7 +170,8 @@
           type: 'get',
           scriptCharset: 'utf-8',
           async: false,
-          data: {"postID": postID},
+          contentType: "application/json",
+          data: JSON.stringify({"postID": postID, "type": type}),
           success: function (data) {
             this.post = data;
           },
@@ -175,7 +183,8 @@
           dataType: 'json',
           type: 'get',
           scriptCharset: 'utf-8',
-          data: {"writer": this.post.writer},
+          contentType: "application/json",
+          data: JSON.stringify({"writer": this.post.writer}),
           success: function (data) {
             this.recentPosts = data;
           },
@@ -187,7 +196,8 @@
           dataType: 'json',
           type: 'get',
           scriptCharset: 'utf-8',
-          data: {"user": this.post.writer},
+          contentType: "application/json",
+          data: JSON.stringify({"user": this.post.writer}),
           success: function (data) {
             this.writer = data;
           },
@@ -211,7 +221,8 @@
           dataType: 'json',
           type: 'post',
           scriptCharset: 'utf-8',
-          data: {"checkResult": this.checkResult, "postID": this.post.id},
+          contentType: "application/json",
+          data: JSON.stringify({"checkResult": this.checkResult, "postID": this.post.id}),
           success: function (data) {
             if (data == 'SUCCESS')
               this.$message("审核成功");
