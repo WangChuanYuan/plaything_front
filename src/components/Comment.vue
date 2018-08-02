@@ -28,7 +28,7 @@
   export default {
     name: "Comment",
     props: {
-      postId: String
+      postId: Number
     },
     data() {
       return {

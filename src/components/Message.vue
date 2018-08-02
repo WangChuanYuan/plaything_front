@@ -29,7 +29,7 @@
     name: "Message",
     components: {Talk},
     props: {
-      usrId: String
+      usrId: Number
     },
     data() {
       return {

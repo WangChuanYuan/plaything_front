@@ -29,7 +29,7 @@
   export default {
     name: "Talk",
     props: {
-      receiverId: String,
+      receiverId: Number,
     },
     data() {
       return {
