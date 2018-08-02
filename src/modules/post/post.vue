@@ -37,7 +37,7 @@
           <!--正文内容用jQuery追加html代码-->
           <div id="article">
             <h3 style="text-align: center">{{post.title}}</h3>
-            <div id="content" class="square" style="word-break: break-all"></div>
+            <div id="content" class="square" style="word-break: break-all; margin-bottom: 45px"></div>
             <!--浏览模式下显示留言板，审批模式下显示审批选项-->
             <hr/>
             <div v-show="mode == 'check'">
@@ -49,7 +49,7 @@
               <el-button style="margin-left: 120px" icon="el-icon-check" @click="check">提交</el-button>
             </div>
             <div v-show="mode == 'read'">
-
+              <Comment :post-id="post.id"></Comment>
             </div>
           </div>
         </el-main>
@@ -104,10 +104,11 @@
   import util from '../../assets/util.js';
   import Talk from "../../components/Talk";
   import ajaxHelper from '../../assets/ajaxHelper';
+  import Comment from "../../components/Comment";
 
   export default {
     name: "post",
-    components: {Talk, UE, Navigation},
+    components: {Comment, Talk, UE, Navigation},
     data() {
       return {
         chatRoomVisible: false,
@@ -222,7 +223,7 @@
       },
       //阅读作者最近发帖
       readPost(index) {
-        alert(this.recentPosts[index].title);
+        window.location.href = './post.html?postId=' + this.recentPosts[index].id + '&mode=read&' + 'type=' + this.recentPosts[index].type;
       },
       //审核
       check() {

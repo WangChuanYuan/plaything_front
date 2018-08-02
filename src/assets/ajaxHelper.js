@@ -255,4 +255,50 @@ ajaxHelper.getUnsolvedContacts = function () {
   })
 }
 
+/**
+ * 当前登录用户发表关于某篇笔记评论 后端记录时间和评论者
+ * @param param {"postId": postId, "content": content}
+ * @returns {Promise<any>}
+ */
+ajaxHelper.shareComment = function (param) {
+  return new Promise(function (resolve, reject) {
+    $.ajax({
+      url: '/api/share_comment',
+      dataType: 'json',
+      type: 'post',
+      contentType: "application/json",
+      data: JSON.stringify(param),
+      success: function (data) {
+        resolve(data);
+      },
+      error: function (error) {
+        reject(error);
+      }
+    })
+  })
+}
+
+/**
+ * 得到某篇笔记的评论
+ * @param param {"postId": postId}
+ * @returns {Promise<any>}
+ */
+ajaxHelper.getCommentOf = function (param) {
+  return new Promise(function (resolve, reject) {
+    $.ajax({
+      url: '/api/get_comment',
+      dataType: 'json',
+      type: 'get',
+      contentType: "application/json",
+      data: JSON.stringify(param),
+      success: function (data) {
+        resolve(data);
+      },
+      error: function (error) {
+        reject(error);
+      }
+    })
+  })
+}
+
 export default ajaxHelper;
