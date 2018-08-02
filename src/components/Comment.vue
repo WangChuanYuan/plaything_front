@@ -28,7 +28,8 @@
   export default {
     name: "Comment",
     props: {
-      postId: Number
+      postId: Number,
+      type: String
     },
     data() {
       return {
@@ -54,12 +55,12 @@
     },
     methods: {
       getComment(){
-        ajaxHelper.getCommentOf({"postId": this.postId}).then((data) => {
+        ajaxHelper.getCommentOf({"postId": this.postId, "type": this.type}).then((data) => {
           this.comment = data;
         });
       },
       addComment() {
-        var comment = {"postId": this.postId, "content": this.commentText};
+        var comment = {"postId": this.postId, "content": this.commentText, "type": this.type};
         ajaxHelper.shareComment(comment).then((data) => {
           if(data == 'SUCCESS'){
             this.commentText = '';

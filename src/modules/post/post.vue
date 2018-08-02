@@ -49,7 +49,7 @@
               <el-button style="margin-left: 120px" icon="el-icon-check" @click="check">提交</el-button>
             </div>
             <div v-show="mode == 'read'">
-              <Comment :post-id="post.id"></Comment>
+              <Comment :post-id="post.id" :type="post.type"></Comment>
             </div>
           </div>
         </el-main>
