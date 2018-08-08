@@ -37,7 +37,7 @@
           <!--正文内容用jQuery追加html代码-->
           <div id="article">
             <h3 style="text-align: center">{{post.title}}</h3>
-            <div id="content" class="square" style="word-break: break-all"></div>
+            <div id="content" class="square" style="word-break: break-all; margin-bottom: 45px"></div>
             <!--浏览模式下显示留言板，审批模式下显示审批选项-->
             <hr/>
             <div v-show="mode == 'check'">
@@ -49,7 +49,7 @@
               <el-button style="margin-left: 120px" icon="el-icon-check" @click="check">提交</el-button>
             </div>
             <div v-show="mode == 'read'">
-
+              <Comment :post-id="post.id" :type="post.type"></Comment>
             </div>
           </div>
         </el-main>
@@ -91,7 +91,7 @@
         </el-aside>
       </el-container>
     </el-container>
-    <el-dialog :visible.sync="chatRoomVisible" :width="'40%'">
+    <el-dialog :visible.sync="chatRoomVisible" width="30%">
       <Talk :receiver-id="writer.id"></Talk>
     </el-dialog>
   </div>
@@ -103,10 +103,12 @@
   import UE from "../../components/UE";
   import util from '../../assets/util.js';
   import Talk from "../../components/Talk";
+  import ajaxHelper from '../../assets/ajaxHelper';
+  import Comment from "../../components/Comment";
 
   export default {
     name: "post",
-    components: {Talk, UE, Navigation},
+    components: {Comment, Talk, UE, Navigation},
     data() {
       return {
         chatRoomVisible: false,
@@ -164,45 +166,54 @@
         if (mode)
           this.mode = mode;
         var postID = util.getParameter('postID');
-        $.ajax({
-          url: '/api/get_post',
-          dataType: 'json',
-          type: 'get',
-          scriptCharset: 'utf-8',
-          async: false,
-          contentType: "application/json",
-          data: JSON.stringify({"postID": postID, "type": type}),
-          success: function (data) {
-            this.post = data;
-          },
-          error: function (error) {
-          }
+        // $.ajax({
+        //   url: '/api/get_post',
+        //   dataType: 'json',
+        //   type: 'get',
+        //   scriptCharset: 'utf-8',
+        //   async: false,
+        //   contentType: "application/json",
+        //   data: JSON.stringify({"postID": postID, "type": type}),
+        //   success: function (data) {
+        //     this.post = data;
+        //   },
+        //   error: function (error) {
+        //   }
+        // });
+        ajaxHelper.getPostByIdAndType({"postID": postID, "type": type}).then((data) => {
+          this.post = data;
         });
-        $.ajax({
-          url: '/api/get_recent_posts',
-          dataType: 'json',
-          type: 'get',
-          scriptCharset: 'utf-8',
-          contentType: "application/json",
-          data: JSON.stringify({"writer": this.post.writer}),
-          success: function (data) {
-            this.recentPosts = data;
-          },
-          error: function (error) {
-          }
+        // $.ajax({
+        //   url: '/api/get_recent_posts',
+        //   dataType: 'json',
+        //   type: 'get',
+        //   scriptCharset: 'utf-8',
+        //   contentType: "application/json",
+        //   data: JSON.stringify({"writer": this.post.writer}),
+        //   success: function (data) {
+        //     this.recentPosts = data;
+        //   },
+        //   error: function (error) {
+        //   }
+        // });
+        ajaxHelper.getRecentPostsByWriter({"writer": this.post.writer}).then((data) => {
+          this.recentPosts = data;
         });
-        $.ajax({
-          url: '/api/get_user',
-          dataType: 'json',
-          type: 'get',
-          scriptCharset: 'utf-8',
-          contentType: "application/json",
-          data: JSON.stringify({"user": this.post.writer}),
-          success: function (data) {
-            this.writer = data;
-          },
-          error: function (error) {
-          }
+        // $.ajax({
+        //   url: '/api/get_user',
+        //   dataType: 'json',
+        //   type: 'get',
+        //   scriptCharset: 'utf-8',
+        //   contentType: "application/json",
+        //   data: JSON.stringify({"user": this.post.writer}),
+        //   success: function (data) {
+        //     this.writer = data;
+        //   },
+        //   error: function (error) {
+        //   }
+        // });
+        ajaxHelper.getUserById({"user": this.post.writer}).then((data) => {
+          this.writer = data;
         });
         $('#content').append(this.post.content);
       },
@@ -212,24 +223,28 @@
       },
       //阅读作者最近发帖
       readPost(index) {
-        alert(this.recentPosts[index].title);
+        window.location.href = './post.html?postId=' + this.recentPosts[index].id + '&mode=read&' + 'type=' + this.recentPosts[index].type;
       },
       //审核
       check() {
-        $.ajax({
-          url: '/api/check_post',
-          dataType: 'json',
-          type: 'post',
-          scriptCharset: 'utf-8',
-          contentType: "application/json",
-          data: JSON.stringify({"checkResult": this.checkResult, "postID": this.post.id}),
-          success: function (data) {
-            if (data == 'SUCCESS')
-              this.$message("审核成功");
-          },
-          error: function (error) {
-          }
-        })
+        // $.ajax({
+        //   url: '/api/check_post',
+        //   dataType: 'json',
+        //   type: 'post',
+        //   scriptCharset: 'utf-8',
+        //   contentType: "application/json",
+        //   data: JSON.stringify({"checkResult": this.checkResult, "postID": this.post.id}),
+        //   success: function (data) {
+        //     if (data == 'SUCCESS')
+        //       this.$message("审核成功");
+        //   },
+        //   error: function (error) {
+        //   }
+        // });
+        ajaxHelper.checkPost({"checkResult": this.checkResult, "postID": this.post.id}).then((data) => {
+          if (data == 'SUCCESS')
+            this.$message("审核成功");
+        });
       }
     }
   }
