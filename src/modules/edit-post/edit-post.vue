@@ -20,11 +20,11 @@
             <el-tooltip effect="light" content="可选择上传最多五张图片或上传一段视频"><h5>封面信息</h5></el-tooltip>
             <el-form-item prop="fileType">
               <el-radio-group v-model="postForm.fileType">
-                <el-radio label="pic">上传图片</el-radio>
-                <el-radio label="video">上传视频</el-radio>
+                <el-radio label="PIC">上传图片</el-radio>
+                <el-radio label="VIDEO">上传视频</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item v-show="postForm.fileType == 'pic'" prop="covers">
+            <el-form-item v-show="postForm.fileType == 'PIC'" prop="covers">
               <el-upload action="mock" :on-preview="handlePictureCardPreview" :on-remove="removeCover"
                          :auto-upload="false" :limit="5" :accept="'image/*'" list-type="picture-card" required
                          :on-change="addCover" :on-exceed="handleExceed">
@@ -35,7 +35,7 @@
                 <img width="100%" :src="dialogImageUrl" alt="">
               </el-dialog>
             </el-form-item>
-            <el-form-item v-show="postForm.fileType == 'video'" prop="video">
+            <el-form-item v-show="postForm.fileType == 'VIDEO'" prop="video">
               <el-upload action="mock" :auto-upload="false" :limit="1" accept=".mp4" :on-exceed="handleExceed"
                          :on-change="addVideo" :on-remove="removeVideo">
                 <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
@@ -123,7 +123,7 @@
           title: '',
           covers: [],
           video: null,
-          fileType: 'pic',
+          fileType: 'PIC',
           tags: [],
           goods: [],
           price: 0,
@@ -139,7 +139,7 @@
         this.dialogVisible = true;
       },
       handleExceed(file, fileList) {
-        if (this.postForm.fileType == 'pic')
+        if (this.postForm.fileType == 'PIC')
           this.$message.warning('当前限制选择 5 个图片');
         else this.$message.warning('当前限制选择1个视频');
       },
@@ -175,7 +175,7 @@
                 form.append("tags", model.goods[i]);
             }
 
-            if (model.fileType == 'pic')
+            if (model.fileType == 'PIC')
               for (var i = 0; i < model.covers.length; i++)
                 form.append("covers", model.covers[i]);
             else form.append("video", model.video);

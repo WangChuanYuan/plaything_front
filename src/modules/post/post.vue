@@ -9,7 +9,7 @@
           <!--主要区域内容-->
           <!--封面，包含封面图，标签，可能有价格-->
           <div id="cover">
-            <div v-if="this.post.fileType == 'pic'">
+            <div v-if="this.post.fileType == 'PIC'">
               <el-carousel ref="carousel" trigger="click" height="530px" :interval="5000" style="width: 500px">
                 <el-carousel-item v-for="cover in post.covers" :key="cover" name="index">
                   <img :src=cover style="margin-left:10%; width: 80%; height: inherit"/>
@@ -42,9 +42,9 @@
             <hr/>
             <div v-show="mode == 'check'">
               <el-radio-group v-model="checkResult">
-                <el-radio label="fail">不通过</el-radio>
-                <el-radio label="pass">通过</el-radio>
-                <el-radio label="recommend">加精</el-radio>
+                <el-radio label="DENIED">不通过</el-radio>
+                <el-radio label="PERMITTED">通过</el-radio>
+                <el-radio label="RECOMMENDED">加精</el-radio>
               </el-radio-group>
               <el-button style="margin-left: 120px" icon="el-icon-check" @click="check">提交</el-button>
             </div>
@@ -75,7 +75,7 @@
               <hr/>
               <div v-for="(post, index) in recentPosts">
                 <div style="margin-bottom: 10px">
-                  <img v-if="post.fileType == 'pic'" :src="post.covers[0]" class="display"
+                  <img v-if="post.fileType == 'PIC'" :src="post.covers[0]" class="display"
                        style="vertical-align: middle"/>
                   <video v-else :src="post.video" class="display" autoplay muted loop style="vertical-align: middle">
                     您的浏览器不支持video
@@ -113,7 +113,7 @@
       return {
         chatRoomVisible: false,
         mode: 'read', //默认为浏览模式
-        checkResult: 'fail', //审核模式下的审查状态，不通过，通过，加精
+        checkResult: 'DENIED', //审核模式下的审查状态，不通过，通过，加精
         post: {
           id: '',
           covers: [require('../../assets/banner1.jpg'),
@@ -123,7 +123,7 @@
           tags: ['美食', '风景', '手艺'],
           title: '疯了疯了疯了',
           type: 'share',
-          fileType: 'pic',
+          fileType: 'PIC',
           price: 0,
           content: '<p>哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈' +
           '哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈' +
@@ -142,14 +142,14 @@
           {
             covers: [require('../../assets/banner1.jpg')],
             title: '推荐游玩地点&购物指南',
-            fileType: 'pic',
+            fileType: 'PIC',
             content: ''
           },
           {
             covers: [require('../../assets/banner2.jpg')],
             title: '购物指南和购物指南',
             video: null,
-            fileType: 'pic',
+            fileType: 'PIC',
             content: ''
           }
         ], //最近几篇发帖
