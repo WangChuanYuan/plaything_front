@@ -34,6 +34,9 @@
     </el-col >
     <el-col :span="2">
     <el-card class="box-card" v-for="(item,index) in perInfo" v-if="item.x=='1'">
+      <div >
+        <img  :src="displayURL" class="avatar" style="margin-left: 40%">
+      </div>
       <div  class="text item" style="margin-left: 15%"  >
         {{'用户名：    ' + item.username }}
       </div>
@@ -54,20 +57,31 @@
         </div>
       </div>
       <div class="bottom clearfix">
-        <el-button type="text" class="button" style="margin-left: 80%;" @click="editPerInfo(item.username,item.address,item.email,item.phone,item.tags)">修改信息</el-button>
+        <el-button type="text" class="button" style="margin-left: 80%;" @click="editPerInfo(item.username,item.address,item.email,item.phone,item.tags,displayURL)">修改信息</el-button>
       </div>
     </el-card>
     </el-col>
 
     <el-col :span="2" style="margin-left: 3.5%">
       <el-card class="edit-card" v-for="(item,index) in editInfo" v-if="item.x=='1'" style="margin-left: 10%">
-        <div>
-            <label style="font-size: 20px; margin-left: 15%">用户名：{{registerForm.userName}}</label>
-          <br>
-          <br>
-        </div>
+
+
         <div>
         <el-form ref="registerForm" :model="registerForm" :rules="rules" :label-position="labelPosition">
+
+          <el-form-item  style="margin-left: 35%; overflow: hidden">
+            <!--上传头像，此处只是添加，最后注册时上传至服务器 multiple 表示是否支持多选文件-->
+            <el-upload class="avatar-uploader" action="mock" :multiple="false" :auto-upload="false"
+                       :on-change="addDisplay" :accept="'image/*'" style="overflow: hidden">
+              <img :src=displayURL class="avatar" style="overflow: hidden" >
+            </el-upload>
+          </el-form-item>
+
+          <div>
+            <label style="font-size: 20px; margin-left: 15%">用户名：{{registerForm.userName}}</label>
+            <br>
+            <br>
+          </div>
 
         <div>
           <el-form-item prop="location">
@@ -108,13 +122,49 @@
       </el-card>
     </el-col>
 
-<!--    <el-col :span="2">
+    <el-col :span="2">
       <el-card  class="CARD" v-for="(item,index) in addCard"  v-if="item.len=='1'" :body-style="{ padding: '0px' }">
         <img v-if="item.len=='1'" :src="item.src" class="image">
         <div v-if="item.len=='1'" style="padding: 20px;">
           <span v-if="item.len=='1'">{{item.title}}</span>
-          <div  style="margin-left: 75%">
+          <div  style="margin-left: 50%">
             <el-button v-if="item.len=='1'" type="text" class="button" @click="ReadArticle(item.id)">阅读全文</el-button>
+          </div>
+        </div>
+      </el-card>
+    </el-col>
+
+<!--    <el-col :span="2">
+      <el-card  class="CARD" v-for="(item,index) in addCard"  v-if="item.len=='2'" :body-style="{ padding: '0px' }">
+        <img v-if="item.len=='2'" :src="item.src" class="image">
+        <div v-if="item.len=='2'" style="padding: 20px;">
+          <span v-if="item.len=='2'">{{item.title}}</span>
+          <div  style="margin-left: 50%">
+            <el-button v-if="item.len=='2'" type="text" class="button" @click="ReadArticle(item.id)">阅读全文</el-button>
+          </div>
+        </div>
+      </el-card>
+    </el-col>
+
+    <el-col :span="2">
+      <el-card  class="CARD" v-for="(item,index) in addCard"  v-if="item.len=='3'" :body-style="{ padding: '0px' }">
+        <img v-if="item.len=='3'" :src="item.src" class="image">
+        <div v-if="item.len=='3'" style="padding: 20px;">
+          <span v-if="item.len=='3'">{{item.title}}</span>
+          <div  style="margin-left: 50%">
+            <el-button v-if="item.len=='3'" type="text" class="button" @click="ReadArticle(item.id)">阅读全文</el-button>
+          </div>
+        </div>
+      </el-card>
+    </el-col>
+
+    <el-col :span="2">
+      <el-card  class="CARD" v-for="(item,index) in addCard"  v-if="item.len=='4'" :body-style="{ padding: '0px' }">
+        <img v-if="item.len=='4'" :src="item.src" class="image">
+        <div v-if="item.len=='4'" style="padding: 20px;">
+          <span v-if="item.len=='4'">{{item.title}}</span>
+          <div  style="margin-left: 50%">
+            <el-button v-if="item.len=='4'" type="text" class="button" @click="ReadArticle(item.id)">阅读全文</el-button>
           </div>
         </div>
       </el-card>
@@ -132,6 +182,7 @@
 <script>
     import Navigation from "../../components/Navigation";
     import Footer from "../../components/Footer";
+    import ajaxHelper from "../../assets/ajaxHelper";
     import util from '../../assets/util.js'
     import $ from 'jquery';
     export default {
@@ -141,12 +192,14 @@
         return {
           labelPosition: 'left',
           isCollapse: false,
+          displayURL: require('../../assets/defaultDisplay.jpg'),
           perInfo: [{
             username: "",
             address: '',
             email: '',
             phone:'',
             tags:[],
+            head:require('../../assets/defaultDisplay.jpg'),
             x:'0',
           }],
           editInfo:[{
@@ -155,7 +208,7 @@
           addCard: [{
             title: "123",
             src: require('../../assets/banner1.jpg'),
-            len: '1',
+            len: '0',
             id:'testID'
           }],
           rules: {
@@ -178,11 +231,14 @@
             x:"0"
           },
           personalInfomation:{
-            username: "",
-            address: '',
-            email: '',
-            phone:'',
-            tags:[],
+            uid: "123",
+            username: "胖爷",
+            address: '日本',
+            email: '123@ssss.com',
+            phone:'123456789',
+            tags:['肥宅','弟弟'],
+            head:require('../../assets/defaultDisplay.jpg'),
+            avatar:null,
           },
         };
       },
@@ -191,12 +247,20 @@
       },
       methods: {
           init(){
-            this.personalInfomation.username='胖爷';
-            this.personalInfomation.address='日本';
-            this.personalInfomation.email='123@a.com';
-            this.personalInfomation.phone='123456789';
-            this.personalInfomation.tags=["肥宅","弟弟"]
-            this.perInfo.push({username:this.personalInfomation.username,address:this.personalInfomation.address,email:this.personalInfomation.email,phone:this.personalInfomation.phone,tags:this.personalInfomation.tags,x:'1'});
+            ajaxHelper.getCurrentUser().then((data) => {
+              var usr = data;
+              if (usr) {
+                this.personalInfomation.username=usr.userName;
+                this.personalInfomation.address=usr.location;
+                this.personalInfomation.email=usr.mail;
+                this.personalInfomation.phone=usr.phone;
+                this.personalInfomation.uid=usr.id;
+                //不清楚tag这里直接这样写有没有问题
+                this.personalInfomation.tags=usr.tags;
+                this.displayURL=usr.display;
+              }
+            })
+            this.perInfo.push({username:this.personalInfomation.username,address:this.personalInfomation.address,email:this.personalInfomation.email,phone:this.personalInfomation.phone,tags:this.personalInfomation.tags,x:'1',head:this.displayURL});
           },
         clickTagItem: function (tag) {
           if (this.registerForm.tags.indexOf(tag.name) < 0)
@@ -215,10 +279,11 @@
               form.append("location", model.location);
               form.append("mail", model.mail);
               form.append("phone", model.phone);
+              form.append("avatar", model.avatar);
               for (var i = 0; i < model.tags.length; i++)
                 form.append("tags", model.tags[i]);
               $.ajax({
-                url: '/api/register',
+                url: '/api/editPerInfo',
                 processData: false,
                 cache: false,
                 contentType: false,
@@ -227,16 +292,16 @@
                 data: form,
                 success: function (data) {
                   if (data != 'FAILURE') {
-                    this.$alert('恭喜您注册成功，您的id为：' + data, '注册成功', {
+                    this.$alert('修改成功', {
                       confirmButtonText: '确定',
                       callback: action => {
                         sessionStorage.setItem('user', JSON.stringify(this.registerForm.userName));
-                        window.location.href = '/';
+                        window.location.href = '/personalInfo.html';
                       }
                     });
                   }
                   else {
-                    this.$message.error("用户名已被注册");
+                    this.$message.error("修改失败");
                   }
                 },
                 error: function (error) {
@@ -255,24 +320,15 @@
         handleClose(key, keyPath) {
           console.log(key, keyPath);
         },
-        editPerInfo(username,address,email,phone,tags){
-          let cards=this.perInfo;
-          cards.forEach((card,index)=>{
-            if(card.x==="1") {
-              let nextCard = cards[index + 1] || cards[index - 1];
-            }
-          });
-          this.perInfo=cards.filter(card=>card.x!=='1');
-          this.registerForm.userName=username;
-          this.registerForm.location=address;
-          this.registerForm.mail=email;
-          this.registerForm.phone=phone;
-          for (var i = 0; i < tags.length; i++)
-            this.registerForm.tags.push(tags[i]);
-          this.editInfo.push({x:'1'})
+
+        addDisplay(file, fileList) {
+          this.displayURL=file.url;
+          this.personalInfomation.head = file.url;
+          this.personalInfomation.avatar = file.raw;
         },
 
-        handleSelect(key, keyPath) {
+        clearCards(){
+          //清除个人信息卡片
           let cards=this.perInfo;
           cards.forEach((card,index)=>{
             if(card.x==="1") {
@@ -281,16 +337,153 @@
           });
           this.perInfo=cards.filter(card=>card.x!=='1');
 
+          //清除修改个人信息卡片
           let cards2=this.editInfo;
           cards2.forEach((card,index)=>{
             if(card.x==="1") {
               let nextCard = cards2[index + 1] || cards2[index - 1];
             }
           });
-          this.editInfo=cards2.filter(card=>card.x!=='1');
+          this.editInfo=cards.filter(card=>card.x!=='1');
+
+          //清除我的笔记卡片
+          let cards3=this.addCard;
+          cards3.forEach((card,index)=>{
+
+            let nextCard = cards3[index + 1] || cards3[index - 1];
+
+          });
+          this.addCard=cards3.filter(card=>card.x!=='1');
+        },
+        editPerInfo(username,address,email,phone,tags,head){
+          this.clearCards();
+          this.registerForm.userName=username;
+          this.registerForm.location=address;
+          this.registerForm.mail=email;
+          this.registerForm.phone=phone;
+          this.registerForm.head=head;
+          for (var i = 0; i < tags.length; i++)
+            this.registerForm.tags.push(tags[i]);
+          this.editInfo.push({x:'1'})
+        },
+
+        loadUncheck(){
+          var postList=new Array();
+          ajaxHelper.getPosts({"writer": this.personalInfomation.uid,"state":"uncheck"}).then((data) => {
+            postList=data;
+          });
+          for (var i=0;i<postList.length;i++){
+            this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].id});
+          }
+
+          //以下注释为demo
+/*          var srcList = new Array();
+          srcList[0] = require('../../assets/banner1.jpg');
+          srcList[1] = require('../../assets/banner2.jpg');
+          srcList[2] = require('../../assets/banner3.jpg');
+          var titleList = new Array();
+          titleList[0] = "未审批1";
+          titleList[1] = "未审批2";
+          titleList[2] = "未审批3";
+          for (var i = 0; i < 3; i++) {
+            this.addCard.push({title: titleList[i], src: srcList[i], len: '1',id:"testID"});
+          }*/
+        },
+
+
+        loadPass(){
+          var postList=new Array();
+          ajaxHelper.getPosts({"writer": this.personalInfomation.uid,"state":"pass"}).then((data) => {
+            postList=data;
+          });
+          for (var i=0;i<postList.length;i++){
+            this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].id});
+          }
+
+          //以下注释为demo
+/*          var srcList = new Array();
+          srcList[0] = require('../../assets/banner3.jpg');
+          srcList[1] = require('../../assets/service2.jpg');
+          srcList[2] = require('../../assets/service1.jpg');
+          var titleList = new Array();
+          titleList[0] = "审核通过1";
+          titleList[1] = "审核通过2";
+          titleList[2] = "审核通过3";
+          for (var i = 0; i < 2; i++) {
+            this.addCard.push({title: titleList[i], src: srcList[i], len: '1',id:"testID"});
+          }*/
+        },
+
+        loadUnpass(){
+          var postList=new Array();
+          ajaxHelper.getPosts({"writer": this.personalInfomation.uid,"state":"fail"}).then((data) => {
+            postList=data;
+          });
+          for (var i=0;i<postList.length;i++){
+            this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].id});
+          }
+          //以下注释为demo
+/*          var srcList = new Array();
+          srcList[0] = require('../../assets/service4.jpg');
+          srcList[1] = require('../../assets/service3.jpg');
+          srcList[2] = require('../../assets/defaultDisplay.jpg');
+          var titleList = new Array();
+          titleList[0] = "审核未通过1";
+          titleList[1] = "审核未通过2";
+          titleList[2] = "审核未通过3";
+          for (var i = 0; i < 3; i++) {
+            this.addCard.push({title: titleList[i], src: srcList[i], len: '1',id:"testID"});
+          }*/
+        },
+
+        ReadArticle(id){
+          window.location.href = '/post.html?postID='+id;
+        },
+
+        loadHighlight(){
+          var postList=new Array();
+          ajaxHelper.getPosts({"writer": this.personalInfomation.uid,"state":"highlight"}).then((data) => {
+            postList=data;
+          });
+          for (var i=0;i<postList.length;i++){
+            this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].id});
+          }
+
+          //以下注释为demo
+/*          var srcList = new Array();
+          srcList[0] = require('../../assets/plaything.jpg');
+          srcList[1] = require('../../assets/service1.jpg');
+          srcList[2] = require('../../assets/banner2.jpg');
+          var titleList = new Array();
+          titleList[0] = "加精1";
+          titleList[1] = "加精2";
+          titleList[2] = "加精3";
+          for (var i = 0; i < 2; i++) {
+            this.addCard.push({title: titleList[i], src: srcList[i], len: '1',id:"testID"});
+          }*/
+        },
+        handleSelect(key, keyPath) {
+
+          this.clearCards();
           switch (key) {
             case "1":
               this.perInfo.push({username:this.personalInfomation.username,address:this.personalInfomation.address,email:this.personalInfomation.email,phone:this.personalInfomation.phone,tags:this.personalInfomation.tags,x:'1'});
+              break;
+
+            case "2-1":
+              this.loadUncheck();
+              break;
+
+            case "2-2":
+              this.loadPass();
+              break;
+
+            case "2-3":
+              this.loadUnpass();
+              break;
+
+            case "2-4":
+              this.loadHighlight();
               break;
           }
         }
@@ -299,6 +492,12 @@
 </script>
 
 <style scoped>
+  .image {
+    width: 100%;
+    display: block;
+  }
+
+
   .left-director:not(.el-menu--collapse) {
     margin-left: 10%;
     width: 200px;
@@ -331,6 +530,14 @@
     line-height: 12px;
   }
 
+  .avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 120px;
+    display: block;
+    margin-left: 40%;
+  }
+
   .clearfix:before,
   .clearfix:after {
     display: table;
@@ -345,10 +552,18 @@
     float: right;
   }
 
+  .avatar-uploader {
+    height: 120px;
+    border-radius: 120px;
+    cursor: pointer;
+    overflow: hidden;
+  }
+
+
+
+
   .CARD{
-    margin-left:10%;
     width: 880px;
-    height: 500px;
   }
 
   #tagCloud {

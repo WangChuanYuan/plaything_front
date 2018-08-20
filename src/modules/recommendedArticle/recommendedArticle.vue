@@ -6,12 +6,12 @@
       </el-header>
 
       <!--标签-->
-      <el-tabs class="TAG" v-model="activeName" @tab-click="handleClick">
+      <el-tabs v-modle="0" class="TAG" v-model="activeName" @open="handleOpen" @close="handleClose" @tab-click="handleClick">
         <el-tab-pane
           :key="item.name"
           v-for="(item, index) in editableTabs"
           :label="item.title"
-          :name="item.name"
+          :name="index"
         >
         </el-tab-pane>
       </el-tabs>
@@ -42,6 +42,7 @@
 <script>
     import Navigation from "../../components/Navigation";
     import Footer from "../../components/Footer";
+    import ajaxHelper from  "../../assets/ajaxHelper";
     import $ from 'jquery';
     export default {
         name: "recommendedArticle",
@@ -54,10 +55,12 @@
           editableTabs: [{
             title: '自然',
             name: '自然',
+            len: '1',
             content: ''
           }, {
             title: '经济',
             name: '经济',
+            len: '1',
             content: ''
           }],
           tabIndex: 2,
@@ -71,16 +74,47 @@
         }
       },
       created: function(){
-          this.handleClick()
+          this.init()
       },
       methods: {
+          init(){
+            var tag=[];
+            ajaxHelper.getCurrentUser().then((data) => {
+              var usr = data;
+              if (usr) {
+                tag=usr.tags;
+              }
+            });
+/*            let tabs=this.editableTabs;
+            tabs.forEach((tab,index)=>{
+              if(tab.len==="1") {
+                let nextTab = tabs[index + 1] || tabs[index - 1];
+              }
+            });
+            this.editableTabs=tabs.filter(tab=>tab.len!=='1');*/
+            for (var i=0;i<tag.length;i++){
+              this.editableTabs.push({ title: tag[i],
+                name: tag[i],
+                content: '',
+                len:'1'})
+            }
+            this.showCard(tag[0]);
+          },
+
+        handleOpen(key, keyPath) {
+          console.log(key, keyPath);
+        },
+        handleClose(key, keyPath) {
+          console.log(key, keyPath);
+        },
+
           handleClick(tab,event){
-            this.showCard(tab.name);
+            this.showCard(tab.label);
           },
 
           ReadArticle(id){
             alert(id);
-            window.location.href="./readArticle.html";
+            window.location.href="./readArticle.html??postID="+id;
           },
 
           showCard(tn){
@@ -91,7 +125,24 @@
               }
             });
             this.addCard=cards.filter(card=>card.len!=='1');
-            if(tn=="自然") {
+            $.ajax({
+              url: '/api/showArticle',
+              processData: false,
+              cache: false,
+              contentType: false,
+              dataType: 'json',
+              type: 'post',
+              data: JSON.stringify({"kind":tn}),
+              success: function (data) {
+                for(var i=0;i<data.length;i++){
+                  this.addCard.push({title: data[i].tilte, src: data[i].src, len: '1',id:data[i].id});
+                }
+              },
+              error: function (error) {
+                this.$message.error("错误");
+              }
+            })
+/*            if(tn=="自然") {
               var srcList = new Array();
               srcList[0] = require('../../assets/banner1.jpg');
               srcList[1] = require('../../assets/banner2.jpg');
@@ -118,7 +169,7 @@
                 this.addCard.src = srcList[i];
                 this.addCard.push({title: titleList[i], src: srcList[i], len: '1',id:"TESTid"});
               }
-            }
+            }*/
           }
       }
     }

@@ -24,7 +24,7 @@
 
         <div class = "formButton">
           <el-form-item style = "width:100%;">
-            <el-button type = "primary" style = "width:100%;" @click =  "login">登录</el-button>
+            <el-button type = "primary" style = "width:100%;" @click =  "login('AccountForm')">登录</el-button>
           </el-form-item>
         </div>
       </el-form>
@@ -72,7 +72,42 @@
 
     },
     methods:{
+      login(formName){
+        console.log(this.AccountForm);
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            let model = this.registerForm;
+            let form = new FormData();
+            form.append("userName", model.username);
+            form.append("password", model.password);
+            $.ajax({
+              url: '/api/adminLogin',
+              processData: false,
+              cache: false,
+              contentType: false,
+              dataType: 'json',
+              type: 'post',
+              data: form,
+              success: function (data) {
+                if (data == 'SUCCESS') {
+                  window.location.href = '/';
 
+                }
+                else {
+                  this.$message.error("用户名或密码错误");
+                }
+              },
+              error: function (error) {
+                this.$message.error("错误");
+              }
+            })
+          } else {
+            this.$message.error('填写信息错误，请检查');
+            return false;
+          }
+        });
+
+      },
     }
   }</script>
 

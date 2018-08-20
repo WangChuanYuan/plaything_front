@@ -36,7 +36,7 @@
           <!--正文内容用jQuery追加html代码-->
           <div id="article">
             <h3 style="text-align: center">{{post.title}}</h3>
-            <div id="content" class="square" style="word-break: break-all"></div>
+            <div id="content" class="square" style="word-break: break-all; margin-bottom: 45px"></div>
             <!--浏览模式下显示留言板，审批模式下显示审批选项-->
             <hr/>
             <div v-show="mode == 'check'">
@@ -101,7 +101,7 @@
   import $ from 'jquery';
   import UE from "../../components/UE";
   import util from '../../assets/util.js';
-  import Talk from "../../components/Talk";
+  import ajaxHelper from '../../assets/ajaxHelper';
 
   export default {
     name: "readArticle",
@@ -110,7 +110,7 @@
       return {
         chatRoomVisible: false,
         mode: 'read', //默认为浏览模式
-        checkResult: 'fail', //审核模式下的审查状态，不通过，通过，加精
+        checkResult: 'DENIED', //审核模式下的审查状态，不通过，通过，加精
         post: {
           id: '',
           covers: [require('../../assets/banner1.jpg'),
@@ -163,45 +163,11 @@
         if (mode)
           this.mode = mode;
         var postID = util.getParameter('postID');
-        $.ajax({
-          url: '/api/get_post',
-          dataType: 'json',
-          type: 'get',
-          scriptCharset: 'utf-8',
-          async: false,
-          contentType: "application/json",
-          data: JSON.stringify({"postID": postID, "type": type}),
-          success: function (data) {
-            this.post = data;
-          },
-          error: function (error) {
-          }
+        ajaxHelper.getPostByIdAndType({"postID": postID, "type": type}).then((data) => {
+          this.post = data;
         });
-/*        $.ajax({
-          url: '/api/get_recent_posts',
-          dataType: 'json',
-          type: 'get',
-          scriptCharset: 'utf-8',
-          contentType: "application/json",
-          data: JSON.stringify({"writer": this.post.writer}),
-          success: function (data) {
-            this.recentPosts = data;
-          },
-          error: function (error) {
-          }
-        });*/
-        $.ajax({
-          url: '/api/get_user',
-          dataType: 'json',
-          type: 'get',
-          scriptCharset: 'utf-8',
-          contentType: "application/json",
-          data: JSON.stringify({"user": this.post.writer}),
-          success: function (data) {
-            this.writer = data;
-          },
-          error: function (error) {
-          }
+        ajaxHelper.getUserById({"user": this.post.writer}).then((data) => {
+          this.writer = data;
         });
         $('#content').append(this.post.content);
       },
@@ -209,12 +175,9 @@
       changeCarousel(index) {
         this.$refs.carousel.setActiveItem(index);
       },
-/*      //阅读作者最近发帖
-      readPost(index) {
-        alert(this.recentPosts[index].title);
-      },*/
+
       //审核
-      check() {
+/*      check() {
         $.ajax({
           url: '/api/check_post',
           dataType: 'json',
@@ -229,7 +192,7 @@
           error: function (error) {
           }
         })
-      }
+      }*/
     }
   }
 </script>

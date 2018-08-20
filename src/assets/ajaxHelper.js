@@ -72,10 +72,106 @@ ajaxHelper.getPostByIdAndType = function (param) {
 }
 
 /**
- * 得到作者最近几篇笔记
- * @param param {"writer": writerId}
+ * 得到作者各种状态下的笔记
+ * @param param {"writer": writerId,"state":state}
  * @returns {Promise<any>}
  */
+ajaxHelper.getPosts = function (param) {
+  return new Promise(function (resolve, reject) {
+    $.ajax({
+      url: '/api/get_state_posts',
+      dataType: 'json',
+      type: 'get',
+      scriptCharset: 'utf-8',
+      contentType: "application/json",
+      data: JSON.stringify(param),
+      success: function (data) {
+        resolve(data);
+      },
+      error: function (error) {
+        reject(error);
+      }
+    })
+  })
+}
+
+/*/!**
+ * 得到作者全部未过审的笔记
+ * @param param {"writer": writerId}
+ * @returns {Promise<any>}
+ *!/
+ajaxHelper.getUnPassedPosts = function (param) {
+  return new Promise(function (resolve, reject) {
+    $.ajax({
+      url: '/api/get_unpassed_posts',
+      dataType: 'json',
+      type: 'get',
+      scriptCharset: 'utf-8',
+      contentType: "application/json",
+      data: JSON.stringify(param),
+      success: function (data) {
+        resolve(data);
+      },
+      error: function (error) {
+        reject(error);
+      }
+    })
+  })
+}
+
+/!**
+ * 得到作者全部已过审的笔记
+ * @param param {"writer": writerId}
+ * @returns {Promise<any>}
+ *!/
+ajaxHelper.getPassedPosts = function (param) {
+  return new Promise(function (resolve, reject) {
+    $.ajax({
+      url: '/api/get_passed_posts',
+      dataType: 'json',
+      type: 'get',
+      scriptCharset: 'utf-8',
+      contentType: "application/json",
+      data: JSON.stringify(param),
+      success: function (data) {
+        resolve(data);
+      },
+      error: function (error) {
+        reject(error);
+      }
+    })
+  })
+}
+
+/!**
+ * 得到作者全部加精的笔记
+ * @param param {"writer": writerId}
+ * @returns {Promise<any>}
+ *!/
+ajaxHelper.getHighLightPosts = function (param) {
+  return new Promise(function (resolve, reject) {
+    $.ajax({
+      url: '/api/get_highlight_posts',
+      dataType: 'json',
+      type: 'get',
+      scriptCharset: 'utf-8',
+      contentType: "application/json",
+      data: JSON.stringify(param),
+      success: function (data) {
+        resolve(data);
+      },
+      error: function (error) {
+        reject(error);
+      }
+    })
+  })
+}
+
+/!**
+ * 得到作者最近待审核的笔记
+ * @param param {"writer": writerId}
+ * @returns {Promise<any>}
+ *!/
 ajaxHelper.getRecentPostsByWriter = function (param) {
   return new Promise(function (resolve, reject) {
     $.ajax({
@@ -93,7 +189,7 @@ ajaxHelper.getRecentPostsByWriter = function (param) {
       }
     })
   })
-}
+}*/
 
 /**
  * 审核一篇笔记
