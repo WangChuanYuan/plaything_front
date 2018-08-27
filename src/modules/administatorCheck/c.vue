@@ -312,7 +312,7 @@
 
       loadUncheck(){
         var postList=new Array();
-        ajaxHelper.getPosts({"writer": "administrator","state":"uncheck"}).then((data) => {
+        ajaxHelper.getPosts({"state":"uncheck"}).then((data) => {
           postList=data;
         });
         for (var i=0;i<postList.length;i++){
@@ -334,7 +334,7 @@
 
       loadPass(){
         var postList=new Array();
-        ajaxHelper.getPosts({"writer": "administrator","state":"pass"}).then((data) => {
+        ajaxHelper.getPosts({"state":"pass"}).then((data) => {
           postList=data;
         });
         for (var i=0;i<postList.length;i++){
@@ -344,7 +344,7 @@
 
       loadUnpass(){
         var postList=new Array();
-        ajaxHelper.getPosts({"writer": "administrator","state":"fail"}).then((data) => {
+        ajaxHelper.getPosts({"state":"fail"}).then((data) => {
           postList=data;
         });
         for (var i=0;i<postList.length;i++){
@@ -354,7 +354,7 @@
 
       loadHighlight(){
         var postList=new Array();
-        ajaxHelper.getPosts({"writer": "administrator","state":"recommend"}).then((data) => {
+        ajaxHelper.getPosts({"state":"recommend"}).then((data) => {
           postList=data;
         });
         for (var i=0;i<postList.length;i++){
