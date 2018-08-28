@@ -119,7 +119,7 @@
             window.location.href = "./mall.html";
             break;
           case "5-1":
-            window.location.href = "./";
+            window.location.href = "./c.html";
             break;
           case "5-2":
             window.location.href = "./edit-post.html";
