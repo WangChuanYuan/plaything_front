@@ -15,7 +15,7 @@
             <el-submenu index="2">
               <template slot="title">
                 <i class="el-icon-location"></i>
-                <span slot="title" style="font-size: 10px">我的笔记</span>
+                <span slot="title" style="font-size: 10px">全部笔记</span>
               </template>
               <el-menu-item-group>
                 <el-menu-item index="2-1">待审批</el-menu-item>
