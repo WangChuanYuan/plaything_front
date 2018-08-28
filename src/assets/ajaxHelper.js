@@ -239,6 +239,30 @@ ajaxHelper.hasAllMessageChecked = function () {
 }
 
 /**
+ * 登录
+ * @param param {"username": username, "password": password}
+ * @returns {Promise<any>}
+ */
+ajaxHelper.login = function(param){
+  return new Promise(function (resolve, reject) {
+    $.ajax({
+      url: '/api/login',
+      dataType: 'json',
+      type: 'post',
+      scriptCharset: 'utf-8',
+      contentType: "application/json",
+      data: JSON.stringify(param),
+      success: function (data) {
+        resolve(data);
+      },
+      error: function (error) {
+        reject(error);
+      }
+    })
+  })
+}
+
+/**
  * 登出
  * @returns {Promise<any>}
  */

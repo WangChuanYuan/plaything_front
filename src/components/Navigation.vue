@@ -31,23 +31,28 @@
     <el-dialog :visible.sync="messageVisible" title="玩意儿聊天室">
       <Message :usr-id="usrId"></Message>
     </el-dialog>
+    <el-dialog :visible.sync="loginVisible" title="登录">
+      <Login></Login>
+    </el-dialog>
   </div>
 </template>
 
 <script>
   import Message from "./Message";
   import ajaxHelper from '../assets/ajaxHelper';
+  import Login from "./Login";
 
   export default {
     name: "Navigation",
-    components: {Message},
+    components: {Login, Message},
     data() {
       return {
         usrId: null,
         timer: null,
-        hasLogin: true,
+        hasLogin: false,
         allChecked: true,
         messageVisible: false,
+        loginVisible: false,
         display: require('../assets/defaultDisplay.jpg')
       };
     },
@@ -119,7 +124,7 @@
             window.location.href = "./mall.html";
             break;
           case "5-1":
-            window.location.href = "./";
+            window.location.href = "./personalInfo.html";
             break;
           case "5-2":
             window.location.href = "./edit-post.html";
@@ -128,7 +133,7 @@
             this.logout();
             break;
           case "6-1":
-            window.location.href = "./";
+            this.loginVisible = true;
             break;
           case "6-2":
             window.location.href = "./register.html";
