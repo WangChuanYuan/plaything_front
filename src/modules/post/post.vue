@@ -32,7 +32,7 @@
                 {{tag}}
               </el-tag>
             </div>
-            <h2 v-if="post.type == 'sell'" style="color: red">{{post.price}}￥</h2>
+            <h2 v-if="post.type == 'SELL'" style="color: red">{{post.price}}￥</h2>
           </div>
           <!--正文内容用jQuery追加html代码-->
           <div id="article">
@@ -122,7 +122,7 @@
           video: null,
           tags: ['美食', '风景', '手艺'],
           title: '疯了疯了疯了',
-          type: 'share',
+          type: 'SHARE',
           fileType: 'PIC',
           price: 0,
           content: '<p>哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈' +

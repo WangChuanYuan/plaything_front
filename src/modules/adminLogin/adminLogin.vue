@@ -81,7 +81,7 @@
             form.append("userName", model.username);
             form.append("password", model.password);
             $.ajax({
-              url: '/api/adminLogin',
+              url: '/api/login',
               processData: false,
               cache: false,
               contentType: false,

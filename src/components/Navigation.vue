@@ -31,7 +31,7 @@
     <el-dialog :visible.sync="messageVisible" title="玩意儿聊天室">
       <Message :usr-id="usrId"></Message>
     </el-dialog>
-    <el-dialog :visible.sync="loginVisible" title="登录">
+    <el-dialog :visible.sync="loginVisible" title="登录" width="25%">
       <Login></Login>
     </el-dialog>
   </div>

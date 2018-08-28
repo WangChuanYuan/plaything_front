@@ -1,35 +1,22 @@
 <template>
   <div>
-    <el-form :model="loginForm" status-icon :rules="loginRules" ref="loginForm" label-width="100px" class="Form">
-      <el-form-item>
-        <h2>Casual用户登录</h2>
-      </el-form-item>
+    <el-form :model="loginForm" status-icon :rules="loginRules" ref="loginForm">
 
       <el-form-item prop="username">
         <label style="color: red">*</label>
-        <label>用户名: </label>
-        <el-input v-model="loginForm.username" name="username"></el-input>
+        <label>用户ID: </label>
+        <el-input v-model="loginForm.username" name="username" style="width: 250px"></el-input>
       </el-form-item>
 
       <el-form-item prop="password">
         <label style="color: red">　*</label>
         <label>密码: </label>
-        <el-input type="password" v-model="loginForm.password" name="password"></el-input>
-      </el-form-item>
-
-      <el-checkbox v-model="loginForm.checked" style="margin-left: 23%;">记住密码</el-checkbox>
-
-      <el-form-item>
-        <p class="change_link" style="margin-left: 27%;margin-top: 0;">
-          还未拥有账号？点击这里
-          <a href="#" @click="toRegister" class="to_register">注册</a>
-        </p>
+        <el-input type="password" v-model="loginForm.password" name="password" style="width: 250px;"></el-input>
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="submitForm('loginForm')" style="margin-left: 17%;" :loading="loading">登录
-        </el-button>
-        <el-button @click="resetForm('loginForm')" style="margin-left: 10%">重置</el-button>
+        <el-button type="primary" @click="login('loginForm')" style="margin-left: 20%">登录</el-button>
+        <el-button type="plain" @click="toRegister">注册</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -45,18 +32,54 @@
         loginForm: {
           username: null,
           password: null
+        },
+        loginRules: {
+          username: [
+            {
+              required: true,
+              message: "请输入用户ID",
+              trigger: "blur"
+            },
+            {
+              validator: (rule, value, callback) => {
+                if (/^[1-9]\d*$/.test(value) == false) {
+                  callback(new Error("用户ID为数字"));
+                } else {
+                  callback();
+                }
+              }, trigger: 'change'
+            }
+          ],
+          password: [
+            {
+              required: true,
+              message: "请输入密码",
+              trigger: "blur"
+            }
+          ]
         }
       }
     },
     methods: {
-      login() {
-        ajaxHelper.login({"username": this.loginForm.username, "password": this.loginForm.password}).then((data)=> {
-          if(data == 'SUCCESS'){
-
-          } else if(data == 'INEXISTENCE'){
-
-          } else{
-
+      toRegister() {
+        window.location.href = './register.html';
+      },
+      login(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            ajaxHelper.login({
+              "username": this.loginForm.username,
+              "password": this.loginForm.password
+            }).then((data) => {
+              if (data == 'SUCCESS') {
+                sessionStorage.setItem('user', JSON.stringify(this.loginForm.username));
+                window.location.href = './';
+              } else if (data == 'INEXISTENCE') {
+                this.$message.warning("用户不存在");
+              } else {
+                this.$message.warning("密码错误");
+              }
+            })
           }
         })
       }
