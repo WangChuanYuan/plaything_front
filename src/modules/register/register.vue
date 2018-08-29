@@ -163,8 +163,18 @@
       }
     },
     methods: {
+      promptSuccess(data){
+        this.$alert('恭喜您注册成功，您的id为：' + data, '注册成功', {
+          confirmButtonText: '确定',
+          callback: action => {
+            sessionStorage.setItem('user', JSON.stringify(this.registerForm.userName));
+            window.location.href = '/';
+          }
+        });
+      },
       register(formName) {
         console.log(this.registerForm);
+        let _this = this;
         this.$refs[formName].validate((valid) => {
           if (valid) {
             let model = this.registerForm;
@@ -188,24 +198,18 @@
               data: form,
               success: function (data) {
                 if (data >= 0) {
-                  this.$alert('恭喜您注册成功，您的id为：' + data, '注册成功', {
-                    confirmButtonText: '确定',
-                    callback: action => {
-                      sessionStorage.setItem('user', JSON.stringify(this.registerForm.userName));
-                      window.location.href = '/';
-                    }
-                  });
+                  _this.promptSuccess(data)
                 }
                 else {
-                  this.$message.error("用户名已被注册");
+                  _this.$message.error("用户名已被注册");
                 }
               },
               error: function (error) {
-                this.$message.error("错误");
+                _this.$message.error("错误");
               }
             })
           } else {
-            this.$message.error('填写信息错误，请检查');
+            _this.$message.error('填写信息错误，请检查');
             return false;
           }
         });
