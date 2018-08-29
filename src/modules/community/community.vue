@@ -176,7 +176,7 @@
             this.$message.error("错误");
           }
         })
-        if(tn=="推荐") {
+/*        if(tn=="推荐") {
           var srcList = new Array();
           srcList[0] = require('../../assets/banner1.jpg');
           srcList[1] = require('../../assets/banner2.jpg');
@@ -201,8 +201,7 @@
             this.addCard.tilte = titleList[i];
             this.addCard.src = srcList[i];
             this.addCard.push({title: titleList[i], src: srcList[i], len: '1',id:"testID"});
-          }
-        }
+          }*/
       }
     }
   }
