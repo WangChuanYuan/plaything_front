@@ -97,7 +97,7 @@
           callback(new Error('请输入密码'));
         } else {
           if (this.registerForm.checkPassword !== '') {
-            this.$refs.registerForm.validateField('checkPass');
+            this.$refs.registerForm.validateField('checkPassword');
           }
           callback();
         }
@@ -120,13 +120,38 @@
           location: "",
           mail: "",
           phone: "",
-          tags: []
+          tags: [],
+          uploaded: false
         },
         rules: {
-          userName: [{required: true, message: "请输入用户名", trigger: 'blur'}],
-          mail: [{type: 'email', message: '请正确输入邮箱地址', trigger: 'blur'}],
-          password: [{required: true, validator: passwordRule, trigger: 'blur'}],
-          checkPassword: [{required: true, validator: checkPasswordRule, trigger: 'blur'}]
+          userName: [
+            {
+              required: true,
+              message: "请输入用户名",
+              trigger: 'blur'
+            }
+          ],
+          mail: [
+            {
+              type: 'email',
+              message: '请正确输入邮箱地址',
+              trigger: 'blur'
+            }
+          ],
+          password: [
+            {
+              required: true,
+              validator: passwordRule,
+              trigger: 'blur'
+            }
+          ],
+          checkPassword: [
+            {
+              required: true,
+              validator: checkPasswordRule,
+              trigger: 'blur'
+            }
+          ]
         },
         displayURL: require('../../assets/defaultDisplay.jpg'),
         hotTag: util.tags,
@@ -146,7 +171,8 @@
             let form = new FormData();
             form.append("userName", model.userName);
             form.append("password", model.password);
-            form.append("avatar", model.avatar);
+            if(model.uploaded)
+              form.append("avatar", model.avatar);
             form.append("location", model.location);
             form.append("mail", model.mail);
             form.append("phone", model.phone);
@@ -161,7 +187,7 @@
               type: 'post',
               data: form,
               success: function (data) {
-                if (data != 'FAILURE') {
+                if (data >= 0) {
                   this.$alert('恭喜您注册成功，您的id为：' + data, '注册成功', {
                     confirmButtonText: '确定',
                     callback: action => {
@@ -187,6 +213,7 @@
       addDisplay(file, fileList) {
         this.displayURL = file.url;
         this.registerForm.avatar = file.raw;
+        this.registerForm.uploaded = true;
       },
       clickTagItem: function (tag) {
         if (this.registerForm.tags.indexOf(tag.name) < 0)
