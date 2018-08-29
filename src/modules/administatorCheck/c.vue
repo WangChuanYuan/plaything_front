@@ -8,10 +8,10 @@
       <el-row>
         <el-col :span="1" style="margin-right: 15%">
           <el-menu default-active="1" class="left-director" @open="handleOpen" @close="handleClose" :collapse="isCollapse" @select="handleSelect">
-            <el-menu-item index="1" style="top: 10px">
+<!--            <el-menu-item index="1" style="top: 10px">
               <i class="el-icon-menu"></i>
               <span slot="title" style="font-size: 10px">管理员信息</span>
-            </el-menu-item>
+            </el-menu-item>-->
             <el-submenu index="2">
               <template slot="title">
                 <i class="el-icon-location"></i>
@@ -27,7 +27,7 @@
 
           </el-menu>
         </el-col >
-        <el-col :span="4">
+<!--        <el-col :span="4">
           <el-card class="box-card" v-for="(item,index) in perInfo" v-if="item.x=='1'" body-style="padding:0px">
             <div >
               <img  :src="displayURL" class="avatar" style="margin-left: 40%">
@@ -58,7 +58,7 @@
               <el-form ref="registerForm" :model="registerForm" :rules="rules" :label-position="labelPosition">
 
                 <el-form-item  style="margin-left: 35%; overflow: hidden">
-                  <!--上传头像，此处只是添加，最后注册时上传至服务器 multiple 表示是否支持多选文件-->
+                  &lt;!&ndash;上传头像，此处只是添加，最后注册时上传至服务器 multiple 表示是否支持多选文件&ndash;&gt;
                   <el-upload class="avatar-uploader" action="mock" :multiple="false" :auto-upload="false"
                              :on-change="addDisplay" :accept="'image/*'" style="overflow: hidden">
                     <img :src=displayURL class="avatar" style="overflow: hidden" >
@@ -97,7 +97,7 @@
               <el-button type="text"  @click="handleSelect('1',0)">取消</el-button>
             </div>
           </el-card>
-        </el-col>
+        </el-col>-->
 
         <el-col :span="10">
           <el-card  class="CARD" v-for="(item,index) in addCard"  v-if="item.len=='1'" :body-style="{ padding: '0px' }">
