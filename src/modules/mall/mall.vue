@@ -16,12 +16,12 @@
               </div>
             </el-col>
             <el-col :span="18">
-              <el-tabs v-model="activeName" @tab-click="handleClick">
+              <el-tabs v-modle="0" class="TAG" v-model="activeName" @open="handleOpen" @close="handleClose" @tab-click="handleClick">
                 <el-tab-pane
-                  ：key="item.name"
-                  v-for="(item) in editableTabs"
+                  :key="item.name"
+                  v-for="(item, index) in editableTabs"
                   :label="item.title"
-                  :name="item.name">
+                  :name="index">
                 </el-tab-pane>
               </el-tabs>
             </el-col>
