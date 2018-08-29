@@ -76,8 +76,10 @@
                 window.location.href = './';
               } else if (data == 'INEXISTENCE') {
                 this.$message.warning("用户不存在");
-              } else {
+              } else if (data == 'WRONG_PASS') {
                 this.$message.warning("密码错误");
+              } else {
+                this.$message.warning("用户名或密码错误")
               }
             })
           }

@@ -34,8 +34,7 @@ ajaxHelper.getUserById = function (param) {
       dataType: 'json',
       type: 'get',
       scriptCharset: 'utf-8',
-      contentType: "application/json",
-      data: JSON.stringify(param),
+      data: param,
       success: function (data) {
         resolve(data);
       },
@@ -59,8 +58,7 @@ ajaxHelper.getPostByIdAndType = function (param) {
       dataType: 'json',
       type: 'get',
       scriptCharset: 'utf-8',
-      contentType: "application/json",
-      data: JSON.stringify(param),
+      data: param,
       success: function (data) {
         resolve(data);
       },
@@ -83,8 +81,7 @@ ajaxHelper.getPosts = function (param) {
       dataType: 'json',
       type: 'get',
       scriptCharset: 'utf-8',
-      contentType: "application/json",
-      data: JSON.stringify(param),
+      data: param,
       success: function (data) {
         resolve(data);
       },
@@ -204,8 +201,7 @@ ajaxHelper.checkPost = function (param) {
       dataType: 'json',
       type: 'post',
       scriptCharset: 'utf-8',
-      contentType: "application/json",
-      data: JSON.stringify(param),
+      data: param,
       success: function (data) {
         resolve(data);
       },
@@ -250,8 +246,7 @@ ajaxHelper.login = function(param){
       dataType: 'json',
       type: 'post',
       scriptCharset: 'utf-8',
-      contentType: "application/json",
-      data: JSON.stringify(param),
+      data: param,
       success: function (data) {
         resolve(data);
       },
@@ -294,8 +289,7 @@ ajaxHelper.getChatBetween = function (param) {
       url: '/api/get_chat',
       dataType: 'json',
       type: 'get',
-      contentType: "application/json",
-      data: JSON.stringify(param),
+      data: param,
       success: function (data) {
         resolve(data);
       },
@@ -318,8 +312,7 @@ ajaxHelper.sendPrivateMessage = function (param) {
       url: '/api/send_privateMessage',
       dataType: 'json',
       type: 'post',
-      contentType: "application/json",
-      data: JSON.stringify(param),
+      data: param,
       success: function (data) {
         resolve(data);
       },
@@ -341,8 +334,7 @@ ajaxHelper.readPrivateMessage = function (param) {
       url: '/api/read_private_message',
       dataType: 'json',
       type: 'post',
-      contentType: "application/json",
-      data: JSON.stringify(param),
+      data: param,
       success: function (data) {
         resolve(data);
       },
@@ -386,8 +378,7 @@ ajaxHelper.shareComment = function (param) {
       url: '/api/share_comment',
       dataType: 'json',
       type: 'post',
-      contentType: "application/json",
-      data: JSON.stringify(param),
+      data: param,
       success: function (data) {
         resolve(data);
       },
@@ -409,8 +400,7 @@ ajaxHelper.getCommentOf = function (param) {
       url: '/api/get_comment',
       dataType: 'json',
       type: 'get',
-      contentType: "application/json",
-      data: JSON.stringify(param),
+      data: param,
       success: function (data) {
         resolve(data);
       },
