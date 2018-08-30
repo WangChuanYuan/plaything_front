@@ -128,7 +128,7 @@
         <div v-if="item.len=='1'" style="padding: 20px;">
           <span v-if="item.len=='1'">{{item.title}}</span>
           <div  style="margin-left: 50%">
-            <el-button v-if="item.len=='1'" type="text" class="button" @click="ReadArticle(item.id)">阅读全文</el-button>
+            <el-button v-if="item.len=='1'" type="text" class="button" @click="ReadArticle(item.id,item.type)">阅读全文</el-button>
           </div>
         </div>
       </el-card>
@@ -209,7 +209,8 @@
             title: "123",
             src: require('../../assets/banner1.jpg'),
             len: '0',
-            id:'testID'
+            id:'testID',
+            type:"",
           }],
           rules: {
             userName: [{required: true, message: "请输入用户名", trigger: 'blur'}],
@@ -255,13 +256,18 @@
                 this.personalInfomation.email=usr.mail;
                 this.personalInfomation.phone=usr.phone;
                 this.personalInfomation.uid=usr.id;
-                //不清楚tag这里直接这样写有没有问题
-                this.personalInfomation.tags=usr.tags;
+                while(this.personalInfomation.tags.length>0){
+                  this.personalInfomation.tags.pop();
+                }
+                for(var i=0;i<usr.tags.length;i++) {
+                  this.personalInfomation.tags.push(usr.tags[i].content);
+                }
                 this.displayURL=usr.display;
+                this.perInfo.push({username:this.personalInfomation.username,address:this.personalInfomation.address,email:this.personalInfomation.email,phone:this.personalInfomation.phone,tags:this.personalInfomation.tags,x:'1',head:this.displayURL});
+
               }
             })
-            this.perInfo.push({username:this.personalInfomation.username,address:this.personalInfomation.address,email:this.personalInfomation.email,phone:this.personalInfomation.phone,tags:this.personalInfomation.tags,x:'1',head:this.displayURL});
-          },
+            },
         clickTagItem: function (tag) {
           if (this.registerForm.tags.indexOf(tag.name) < 0)
             this.registerForm.tags.push(tag.name);
@@ -270,10 +276,13 @@
           this.registerForm.tags.splice(this.registerForm.tags.indexOf(tag), 1);
         },
         confirmEdit(formName) {
+
           console.log(this.registerForm);
           this.$refs[formName].validate((valid) => {
             if (valid) {
+
               let model = this.registerForm;
+              alert(model.location);
               let form = new FormData();
               form.append("userName", model.userName);
               form.append("location", model.location);
@@ -362,6 +371,9 @@
           this.registerForm.mail=email;
           this.registerForm.phone=phone;
           this.registerForm.head=head;
+          while(this.registerForm.tags.length>0){
+            this.registerForm.tags.pop();
+          }
           for (var i = 0; i < tags.length; i++)
             this.registerForm.tags.push(tags[i]);
           this.editInfo.push({x:'1'})
@@ -373,7 +385,7 @@
             postList=data;
           });
           for (var i=0;i<postList.length;i++){
-            this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].id});
+            this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].id, type:postList[i].type});
           }
 
           //以下注释为demo
@@ -397,7 +409,7 @@
             postList=data;
           });
           for (var i=0;i<postList.length;i++){
-            this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].id});
+            this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].id, type:postList[i].type});
           }
 
           //以下注释为demo
@@ -420,7 +432,7 @@
             postList=data;
           });
           for (var i=0;i<postList.length;i++){
-            this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].id});
+            this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].id, type:postList[i].type});
           }
           //以下注释为demo
 /*          var srcList = new Array();
@@ -436,8 +448,8 @@
           }*/
         },
 
-        ReadArticle(id){
-          window.location.href = '/post.html?postID='+id;
+        ReadArticle(id,type){
+          window.location.href = '/post.html?postID='+id+'&type='+type;
         },
 
         loadHighlight(){
@@ -446,7 +458,7 @@
             postList=data;
           });
           for (var i=0;i<postList.length;i++){
-            this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].id});
+            this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].id, type:postList[i].type});
           }
 
           //以下注释为demo

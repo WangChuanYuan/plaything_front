@@ -86,11 +86,21 @@
       },
       methods: {
           init(){
-            var tag=[];
+            var tag;
             ajaxHelper.getCurrentUser().then((data) => {
               var usr = data;
               if (usr) {
                 tag=usr.tags;
+                while(this.editableTabs.length>0){
+                  this.editableTabs.pop();
+                }
+                for (var i=0;i<tag.length;i++){
+                  this.editableTabs.push({ title: tag[i].content,
+                    name: tag[i].content,
+                    content: '',
+                    len:'1'})
+                }
+                this.showCard(tag[0]);
               }
             });
 /*            let tabs=this.editableTabs;
@@ -100,13 +110,8 @@
               }
             });
             this.editableTabs=tabs.filter(tab=>tab.len!=='1');*/
-            for (var i=0;i<tag.length;i++){
-              this.editableTabs.push({ title: tag[i],
-                name: tag[i],
-                content: '',
-                len:'1'})
-            }
-            this.showCard(tag[0]);
+
+
           },
 
         handleOpen(key, keyPath) {
