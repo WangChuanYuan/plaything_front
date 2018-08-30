@@ -58,10 +58,10 @@
     },
     mounted: function () {
       this.init();
-      this.timer = setInterval(this.hasNewMessage, 1000);
+      //this.timer = setInterval(this.hasNewMessage, 1000);
     },
     beforeDestroy: function () {
-      clearInterval(this.timer);
+      //clearInterval(this.timer);
     },
     methods: {
       init() {

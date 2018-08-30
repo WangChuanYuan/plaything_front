@@ -161,6 +161,7 @@
       sharePost(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            let _this = this;
             let model = this.postForm;
             let form = new FormData();
             model.content = this.$refs.editor.getUEContent();
@@ -196,14 +197,14 @@
               data: form,
               success: function (result) {
                 if (result == 'SUCCESS') {
-                  this.$message({
+                  _this.$message({
                     message: '分享成功，等待审核',
                     type: 'success'
                   });
                   window.location.href = './';
                 }
                 else {
-                  this.$message.error('分享失败');
+                  _this.$message.error('分享失败');
                 }
               },
               error: function (error) {
