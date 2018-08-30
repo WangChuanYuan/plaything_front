@@ -65,22 +65,6 @@
     },
     methods: {
       init() {
-        // $.ajax({
-        //   url: '/api/current_user',
-        //   dataType: 'json',
-        //   type: 'get',
-        //   scriptCharset: 'utf-8',
-        //   success: function (data) {
-        //     var usr = data;
-        //     if (usr) {
-        //       this.usrId = usr.id;
-        //       this.hasLogin = true;
-        //       this.display = (usr.display) ? usr.display : require('../assets/defaultDisplay.jpg');
-        //     }
-        //   },
-        //   error: function (error) {
-        //   }
-        // });
         ajaxHelper.getCurrentUser().then((data) => {
           var usr = data;
           if (usr) {
@@ -93,17 +77,6 @@
       //当前登录的用户是否有未读消息
       hasNewMessage() {
         if (this.hasLogin) {
-        //   $.ajax({
-        //     url: '/api/hasAllMessageChecked',
-        //     dataType: 'json',
-        //     type: 'get',
-        //     scriptCharset: 'utf-8',
-        //     success: function (data) {
-        //       this.allChecked = data;
-        //     },
-        //     error: function () {
-        //     }
-        //   })
           ajaxHelper.hasAllMessageChecked().then((data) => {
             this.allChecked = data;
           })
@@ -142,18 +115,6 @@
       },
       logout() {
         this.$confirm('确认退出?', '提示', {}).then(() => {
-          // $.ajax({
-          //   url: '/api/logout',
-          //   type: 'post',
-          //   scriptCharset: 'utf-8',
-          //   dataType: 'json',
-          //   success: function (data) {
-          //     this.usrId = null;
-          //     this.hasLogin = false;
-          //   },
-          //   error: function (error) {
-          //   }
-          // });
           ajaxHelper.logout().then(() => {
             this.usrId = null;
             this.hasLogin = false;

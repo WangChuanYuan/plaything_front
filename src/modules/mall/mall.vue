@@ -147,7 +147,7 @@
         this.showCard(tab.name)
       },
       ReadArticle(id){
-        window.location.href = '/post.html?postID='+id;
+        window.location.href = '/post.html?postID='+id+'&type=SELL';
       },
 
       showCard(tn){

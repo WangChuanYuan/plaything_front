@@ -40,7 +40,7 @@
             <div id="content" class="square" style="word-break: break-all; margin-bottom: 45px"></div>
             <!--浏览模式下显示留言板，审批模式下显示审批选项-->
             <hr/>
-            <div v-show="mode == 'check'">
+            <div v-show="mode == 'CHECK'">
               <el-radio-group v-model="checkResult">
                 <el-radio label="DENIED">不通过</el-radio>
                 <el-radio label="PERMITTED">通过</el-radio>
@@ -48,7 +48,7 @@
               </el-radio-group>
               <el-button style="margin-left: 120px" icon="el-icon-check" @click="check">提交</el-button>
             </div>
-            <div v-show="mode == 'read'">
+            <div v-show="mode == 'READ'">
               <Comment :post-id="post.id" :type="post.type"></Comment>
             </div>
           </div>
@@ -112,47 +112,26 @@
     data() {
       return {
         chatRoomVisible: false,
-        mode: 'read', //默认为浏览模式
+        mode: 'READ', //默认为浏览模式
         checkResult: 'DENIED', //审核模式下的审查状态，不通过，通过，加精
         post: {
           id: '',
-          covers: [require('../../assets/banner1.jpg'),
-            require('../../assets/banner2.jpg'),
-            require('../../assets/banner3.jpg')],
+          covers: [],
           video: null,
-          tags: ['美食', '风景', '手艺'],
-          title: '疯了疯了疯了',
+          tags: [],
+          title: '',
           type: 'SHARE',
           fileType: 'PIC',
           price: 0,
-          content: '<p>哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈' +
-          '哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈' +
-          '哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈' +
-          '哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈' +
-          '<img src="http://img.baidu.com/hi/jx2/j_0057.gif"/>\n' +
-          '</p>',
+          content: '',
         },
         writer: {
-          id: '123',
-          userName: '王川源',
-          phone: '12345567',
-          display: require('../../assets/banner1.jpg')
+          id: '',
+          userName: '',
+          phone: '',
+          display: require('../../assets/defaultDisplay.jpg')
         }, //作者
-        recentPosts: [
-          {
-            covers: [require('../../assets/banner1.jpg')],
-            title: '推荐游玩地点&购物指南',
-            fileType: 'PIC',
-            content: ''
-          },
-          {
-            covers: [require('../../assets/banner2.jpg')],
-            title: '购物指南和购物指南',
-            video: null,
-            fileType: 'PIC',
-            content: ''
-          }
-        ], //最近几篇发帖
+        recentPosts: [], //最近几篇发帖
       }
     },
     mounted: function () {
@@ -166,52 +145,12 @@
         if (mode)
           this.mode = mode;
         var postID = util.getParameter('postID');
-        // $.ajax({
-        //   url: '/api/get_post',
-        //   dataType: 'json',
-        //   type: 'get',
-        //   scriptCharset: 'utf-8',
-        //   async: false,
-        //   contentType: "application/json",
-        //   data: JSON.stringify({"postID": postID, "type": type}),
-        //   success: function (data) {
-        //     this.post = data;
-        //   },
-        //   error: function (error) {
-        //   }
-        // });
         ajaxHelper.getPostByIdAndType({"postID": postID, "type": type}).then((data) => {
           this.post = data;
         });
-        // $.ajax({
-        //   url: '/api/get_recent_posts',
-        //   dataType: 'json',
-        //   type: 'get',
-        //   scriptCharset: 'utf-8',
-        //   contentType: "application/json",
-        //   data: JSON.stringify({"writer": this.post.writer}),
-        //   success: function (data) {
-        //     this.recentPosts = data;
-        //   },
-        //   error: function (error) {
-        //   }
-        // });
         ajaxHelper.getRecentPostsByWriter({"writer": this.post.writer}).then((data) => {
           this.recentPosts = data;
         });
-        // $.ajax({
-        //   url: '/api/get_user',
-        //   dataType: 'json',
-        //   type: 'get',
-        //   scriptCharset: 'utf-8',
-        //   contentType: "application/json",
-        //   data: JSON.stringify({"user": this.post.writer}),
-        //   success: function (data) {
-        //     this.writer = data;
-        //   },
-        //   error: function (error) {
-        //   }
-        // });
         ajaxHelper.getUserById({"user": this.post.writer}).then((data) => {
           this.writer = data;
         });
@@ -223,25 +162,11 @@
       },
       //阅读作者最近发帖
       readPost(index) {
-        window.location.href = './post.html?postId=' + this.recentPosts[index].id + '&mode=read&' + 'type=' + this.recentPosts[index].type;
+        window.location.href = './post.html?postId=' + this.recentPosts[index].id + '&mode=READ&' + 'type=' + this.recentPosts[index].type;
       },
       //审核
       check() {
-        // $.ajax({
-        //   url: '/api/check_post',
-        //   dataType: 'json',
-        //   type: 'post',
-        //   scriptCharset: 'utf-8',
-        //   contentType: "application/json",
-        //   data: JSON.stringify({"checkResult": this.checkResult, "postID": this.post.id}),
-        //   success: function (data) {
-        //     if (data == 'SUCCESS')
-        //       this.$message("审核成功");
-        //   },
-        //   error: function (error) {
-        //   }
-        // });
-        ajaxHelper.checkPost({"checkResult": this.checkResult, "postID": this.post.id}).then((data) => {
+        ajaxHelper.checkPost({"checkResult": this.checkResult, "postID": this.post.id, "type": this.post.type}).then((data) => {
           if (data == 'SUCCESS')
             this.$message("审核成功");
         });
