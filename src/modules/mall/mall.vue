@@ -38,7 +38,12 @@
           <el-col class="CARDS" v-for="(item,index) in addCard"  v-if="item.len=='1'">
             <el-row :span="4" v-if="item.len=='1'" style="padding: 10px">
               <el-card class="card" v-if="item.len=='1'" :body-style="{ padding: '0px'}" shadow="hover">
-                <img v-if="item.len=='1'" :src="item.src" class="image" height="250px">
+                <div v-if="item.fileType=='PIC'">
+                  <img v-if="item.len=='1'" :src="item.src" class="image" height="250px">
+                </div>
+                <div v-else>
+                  <video :src="item.video" controls="controls" style="display: block;width: 100%" height="250px">您的浏览器不支持video</video>
+                </div>
                 <div v-if="item.len=='1'" style="padding: 0px;">
                   <span>&nbsp;&nbsp;&nbsp;</span>
                   <div v-if="item.len=='1'" class="bottom clearfix" style="height: 20px">
@@ -63,35 +68,31 @@
 <script>
   import Navigation from "../../components/Navigation";
   import Footer from "../../components/Footer";
+  import ajaxHelper from  "../../assets/ajaxHelper";
   import $ from 'jquery';
   export default {
-    name: "community",
+    name: "mall",
     components: {Footer, Navigation},
     data() {
       return {
         searchText:"",
-        editableTabsValue: '12',
+        editableTabsValue: '0',
         editableTabs: [
-          {title: '推荐', name: '推荐', content: ''},
-          {title: '美食', name: '美食', content: ''},
-          {title: '书籍', name: '书籍', content: ''},
-          {title: '母婴', name: '母婴', content: ''},
-          {title: '服饰', name: '服饰', content: ''},
-          {title: '家居', name: '家居', content: ''},
-          {title: '护肤', name: '护肤', content: ''},
-          {title: '运动', name: '运动', content: ''},
-          {title: '宠物', name: '宠物', content: ''},
-          {title: '保健品', name: '保健品', content: ''},
-          {title: '数码', name: '数码', content: ''},
-          {title: '护理', name: '护理', content: ''},
-          {title: '其他', name: '其他', content: ''}],
+          {
+            title:'',
+            name:'',
+            content:''
+          }],
         input: "",
         tabIndex: 2,
         addCard: [{
           title: "",
           src: '',
           len: '0',
-          id:'testID'
+          id:'testID',
+          fileType:'',
+          video:null,
+          type:'',
         }],
         tempCard: [{
           title: "",
@@ -109,11 +110,9 @@
       init(){
         var tag=[];
         ajaxHelper.getCurrentUser().then((data) => {
-          var usr = data;
-          if (usr) {
-            tag=usr.tags;
-          }
+          tag=data.tags
         });
+        this.editableTabsValue=tag.length-1
         for (var i=0;i<tag.length;i++){
           this.editableTabs.push({ title: tag[i],
             name: tag[i],
@@ -151,6 +150,7 @@
       },
 
       showCard(tn){
+        alert(tn)
         let cards=this.addCard;
         cards.forEach((card,index)=>{
           if(card.len==="1") {
@@ -165,11 +165,18 @@
           contentType: false,
           dataType: 'json',
           type: 'post',
-          data: JSON.stringify({"tag":tn}),
+          data: tn,
           success: function (data) {
+            alert("mall cards success!")
             for(var i=0;i<data.length;i++){
-              this.addCard.push({title: data[i].tilte, src: data[i].src, len: '1',id:data[i].id});
+              if(data[i].fileType=='PIC'){
+                this.addCard.push({type:data[i].type,title: data[i].tilte, src: data[i].covers[0].src, len: '1', id: data[i].id,fileType:data[i].postType});
+              }
+              else{
+                this.addCard.push({type:data[i].type,title: data[i].tilte, video:data[i].video, len: '1', id: data[i].id,fileType: data[i].postType});
             }
+            }
+            alert("success!")
           },
           error: function (error) {
             this.$message.error("错误");

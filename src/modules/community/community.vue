@@ -38,7 +38,12 @@
           <el-col class="CARDS" v-for="(item,index) in addCard"  v-if="item.len=='1'">
             <el-row :span="4" v-if="item.len=='1'" style="padding: 10px">
               <el-card class="card" v-if="item.len=='1'" :body-style="{ padding: '0px'}" shadow="hover">
-                <img v-if="item.len=='1'" :src="item.src" class="image" height="250px">
+                <div v-if="item.fileType=='PIC'">
+                  <img v-if="item.len=='1'" :src="item.src" class="image" height="250px">
+                </div>
+                <div v-else>
+                  <video :src="item.video" controls="controls" style="display: block;width: 100%" height="250px">您的浏览器不支持video</video>
+                </div>
                 <div v-if="item.len=='1'" style="padding: 0px;">
                   <span>&nbsp;&nbsp;&nbsp;</span>
                   <div v-if="item.len=='1'" class="bottom clearfix" style="height: 20px">
@@ -63,6 +68,7 @@
 <script>
   import Navigation from "../../components/Navigation";
   import Footer from "../../components/Footer";
+  import ajaxHelper from  "../../assets/ajaxHelper";
   import $ from 'jquery';
   export default {
     name: "community",
@@ -91,7 +97,10 @@
           title: "",
           src: '',
           len: '0',
-          id:'testID'
+          id:'testID',
+          fileType:'',
+          video:null,
+          type:'',
         }],
         tempCard: [{
           title: "",
@@ -143,21 +152,28 @@
           this.addCard.push({title: posts[i].tilte, src: posts[i].src, len: '1',id:posts[i].id});
         }
       },
+      handleOpen(key, keyPath) {
+        console.log(key, keyPath);
+      },
+      handleClose(key, keyPath) {
+        console.log(key, keyPath);
+      },
       handleClick(tab,event){
         this.showCard(tab.name)
       },
 
       ReadArticle(id){
-        window.location.href = '/post.html?postID='+id;
+        window.location.href = '/post.html?postID='+id+'&type=SELL';
       },
-      showCard(tn){
-        let cards=this.addCard;
-        cards.forEach((card,index)=>{
-          if(card.len==="1") {
+      showCard(tn) {
+        alert(tn)
+        let cards = this.addCard;
+        cards.forEach((card, index) => {
+          if (card.len === "1") {
             let nextCard = cards[index + 1] || cards[index - 1];
           }
         });
-        this.addCard=cards.filter(card=>card.len!=='1');
+        this.addCard = cards.filter(card => card.len !== '1');
         $.ajax({
           url: '/api/receive_posts',
           processData: false,
@@ -165,42 +181,34 @@
           contentType: false,
           dataType: 'json',
           type: 'post',
-          data: JSON.stringify({"tag":tn}),
+          data: tn,
           success: function (data) {
-            for(var i=0;i<data.length;i++){
-              this.addCard.push({title: data[i].tilte, src: data[i].src, len: '1',id:data[i].id});
+            for (var i = 0; i < data.length; i++) {
+              if(data[i].fileType=='PIC'){
+                this.addCard.push({type:data[i].type,title: data[i].tilte, src: data[i].covers[0].src, len: '1', id: data[i].id,fileType:data[i].postType});
+              }
+              else{
+                this.addCard.push({type:data[i].type,title: data[i].tilte, video:data[i].video, len: '1', id: data[i].id,fileType: data[i].postType});
+              }
             }
           },
           error: function (error) {
             this.$message.error("错误");
           }
         })
-/*        if(tn=="推荐") {
+/*        if (tn == "0") {
           var srcList = new Array();
-          srcList[0] = require('../../assets/banner1.jpg');
-          srcList[1] = require('../../assets/banner2.jpg');
-          srcList[2] = require('../../assets/banner3.jpg');
-          srcList[3] = require('../../assets/banner3.jpg');
-          srcList[4] = require('../../assets/banner3.jpg');
-          srcList[5] = require('../../assets/banner3.jpg');
-          srcList[6] = require('../../assets/banner3.jpg');
-          srcList[7] = require('../../assets/banner3.jpg');
-          srcList[8] = require('../../assets/banner3.jpg');
+          srcList[0] = require('../../assets/5.mp4');
+          srcList[1] = require('../../assets/5.mp4');
           var titleList = new Array();
-          titleList[0] = "自然1";
-          titleList[1] = "自然2";
-          titleList[2] = "自然3";
-          titleList[3] = "自然3";
-          titleList[4] = "自然3";
-          titleList[5] = "自然3";
-          titleList[6] = "自然3";
-          titleList[7] = "自然3";
-          titleList[8] = "自然3";
-          for (var i = 0; i < 9; i++) {
+          titleList[0] = "视频1";
+          titleList[1] = "视频2";
+          for (var i = 0; i < 2; i++) {
             this.addCard.tilte = titleList[i];
-            this.addCard.src = srcList[i];
-            this.addCard.push({title: titleList[i], src: srcList[i], len: '1',id:"testID"});
-          }*/
+            this.addCard.video = srcList[i];
+            this.addCard.push({type:'VIDEO',title: titleList[i], video: srcList[i], len: '1',id:"TESTid",fileType:'VIDEO'});
+          }
+        }*/
       }
     }
   }
