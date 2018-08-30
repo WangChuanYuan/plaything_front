@@ -255,7 +255,7 @@
                 this.personalInfomation.address=usr.location;
                 this.personalInfomation.email=usr.mail;
                 this.personalInfomation.phone=usr.phone;
-                this.personalInfomation.uid=usr.id;
+                this.personalInfomation.uid=usr.userId;
                 while(this.personalInfomation.tags.length>0){
                   this.personalInfomation.tags.pop();
                 }
