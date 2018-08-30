@@ -359,8 +359,9 @@
           let cards3=this.addCard;
           cards3.forEach((card,index)=>{
 
-            let nextCard = cards3[index + 1] || cards3[index - 1];
-
+            if(card.x==="1") {
+              let nextCard = cards3[index + 1] || cards3[index - 1];
+            }
           });
           this.addCard=cards3.filter(card=>card.x!=='1');
         },
@@ -380,13 +381,18 @@
         },
 
         loadUncheck(){
-          var postList=new Array();
+          var postList;
           ajaxHelper.getPosts({"writer": this.personalInfomation.uid,"state":"uncheck"}).then((data) => {
             postList=data;
+            for (var i=0;i<postList.length;i++){
+              if(postList[i].type=='SELL')
+              this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].cid, type:postList[i].type});
+              else
+                this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].messageId, type:postList[i].type});
+
+            }
           });
-          for (var i=0;i<postList.length;i++){
-            this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].id, type:postList[i].type});
-          }
+
 
           //以下注释为demo
 /*          var srcList = new Array();
