@@ -16,7 +16,7 @@
         </div>
 
         <div class = "formGroup">
-          <el-form-item  label = "账号" prop = "user" >
+          <el-form-item  label = "账号" prop = "username" >
             <el-input type = "text"  auto-complete = "off" placeholder = "请输入管理员账号" class = "form-control" ></el-input></el-form-item>
           <el-form-item label = "密码" prop = "password" class = "form-inline">
             <el-input type = "password" auto-complete = "off" placeholder = "请输入密码" class = "form-control" ></el-input></el-form-item>
@@ -78,7 +78,7 @@
           if (valid) {
             let model = this.AccountForm;
             let form = new FormData();
-            form.append("userName", model.username);
+            form.append("username", model.username);
             form.append("password", model.password);
             $.ajax({
               url: '/api/login',

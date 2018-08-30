@@ -68,7 +68,7 @@
         ajaxHelper.getCurrentUser().then((data) => {
           var usr = data;
           if (usr) {
-            this.usrId = usr.id;
+            this.usrId = usr.userId;
             this.hasLogin = true;
             this.display = (usr.display) ? usr.display : require('../assets/defaultDisplay.jpg');
           }
