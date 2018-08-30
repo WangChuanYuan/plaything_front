@@ -164,11 +164,11 @@ ajaxHelper.getHighLightPosts = function (param) {
   })
 }
 
-/!**
+/**
  * 得到作者最近待审核的笔记
  * @param param {"writer": writerId}
  * @returns {Promise<any>}
- *!/
+ */
 ajaxHelper.getRecentPostsByWriter = function (param) {
   return new Promise(function (resolve, reject) {
     $.ajax({
@@ -176,8 +176,7 @@ ajaxHelper.getRecentPostsByWriter = function (param) {
       dataType: 'json',
       type: 'get',
       scriptCharset: 'utf-8',
-      contentType: "application/json",
-      data: JSON.stringify(param),
+      data: param,
       success: function (data) {
         resolve(data);
       },
@@ -186,7 +185,7 @@ ajaxHelper.getRecentPostsByWriter = function (param) {
       }
     })
   })
-}*/
+}
 
 /**
  * 审核一篇笔记

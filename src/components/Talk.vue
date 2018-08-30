@@ -28,44 +28,32 @@
 
   export default {
     name: "Talk",
-    props: {
-      receiverId: Number,
-    },
+    props: ['receiverId'],
     data() {
       return {
         //正与你进行聊天的用户
-        otherId: 'M',
+        otherId: 2,
         otherName: 'M',
         otherDisplay: require('../assets/defaultDisplay.jpg'),
-        myId: 'W',
+        myId: 1,
         myDisplay: require('../assets/defaultDisplay.jpg'),
         content: '',
         //轮询获取新的消息
         timer: null,
-        talks: [
-          {
-            senderId: 'W',
-            receiverId: 'M',
-            content: '在吗?',
-            time: '2018-07-30 11:20:12'
-          },
-          {
-            senderId: 'W',
-            receiverId: 'M',
-            content: '在吗?',
-            time: '2018-07-30 11:20:12'
-          },
-          {
-            senderId: 'M',
-            receiverId: 'W',
-            content: '在!',
-            time: '2018-07-30 11:20:12'
-          }
-        ]
+        talks: [] //{senderId: 'M', receiverId: 'W', content: '在!', time: '2018-07-30 11:20:12'}
+      }
+    },
+    watch: {
+      receiverId: {
+        handler(newValue, oldValue){
+          this.init()
+        },
+        deep: true
       }
     },
     mounted() {
       this.init();
+      this.timer = setInterval(this.getNewMessage, 1000);
     },
     beforeDestroy() {
       clearInterval(this.timer);
@@ -91,7 +79,7 @@
         // });
         ajaxHelper.getCurrentUser().then((data) => {
           var user = data;
-          this.myId = user.id;
+          this.myId = user.userId;
           if (user.display)
             this.myDisplay = user.display;
         });
@@ -114,12 +102,11 @@
         // });
         ajaxHelper.getUserById({"user": this.receiverId}).then((data) => {
           var user = data;
-          this.otherId = user.id;
+          this.otherId = user.userId;
           this.otherName = user.userName;
           if (user.display)
             this.otherDisplay = user.display;
         });
-        this.timer = setInterval(this.getNewMessage, 1000);
       },
       showTime(index) {
         //上一次发送时间1分钟以内的不再显示发送时间

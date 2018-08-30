@@ -29,7 +29,7 @@
             <div>
               <el-tag style="margin: 5px; border-color: #565656; color: #565656" color="white" size="medium" :key="tag"
                       v-for="tag in post.tags">
-                {{tag}}
+                {{tag.content}}
               </el-tag>
             </div>
             <h2 v-if="post.type == 'SELL'" style="color: red">{{post.price}}￥</h2>
@@ -49,7 +49,7 @@
               <el-button style="margin-left: 120px" icon="el-icon-check" @click="check">提交</el-button>
             </div>
             <div v-show="mode == 'READ'">
-              <Comment :post-id="post.id" :type="post.type"></Comment>
+              <Comment :post-id.sync="post.id" :type.sync="post.type" ref="comment"></Comment>
             </div>
           </div>
         </el-main>
@@ -75,7 +75,7 @@
               <hr/>
               <div v-for="(post, index) in recentPosts">
                 <div style="margin-bottom: 10px">
-                  <img v-if="post.fileType == 'PIC'" :src="post.covers[0]" class="display"
+                  <img v-if="post.postType == 'PIC'" :src="post.covers[0]" class="display"
                        style="vertical-align: middle"/>
                   <video v-else :src="post.video" class="display" autoplay muted loop style="vertical-align: middle">
                     您的浏览器不支持video
@@ -92,7 +92,7 @@
       </el-container>
     </el-container>
     <el-dialog :visible.sync="chatRoomVisible" width="30%">
-      <Talk :receiver-id="writer.id"></Talk>
+      <Talk :receiver-id="writer.userId"></Talk>
     </el-dialog>
   </div>
 </template>
@@ -115,7 +115,7 @@
         mode: 'READ', //默认为浏览模式
         checkResult: 'DENIED', //审核模式下的审查状态，不通过，通过，加精
         post: {
-          id: '',
+          id: 1,
           covers: [],
           video: null,
           tags: [],
@@ -124,9 +124,10 @@
           fileType: 'PIC',
           price: 0,
           content: '',
+          writer: 3
         },
         writer: {
-          id: '',
+          userId: 1,
           userName: '',
           phone: '',
           display: require('../../assets/defaultDisplay.jpg')
@@ -140,21 +141,57 @@
     },
     methods: {
       init() {
+        let _this = this;
         var mode = util.getParameter('mode');
         var type = util.getParameter('type');
         if (mode)
           this.mode = mode;
         var postID = util.getParameter('postID');
-        ajaxHelper.getPostByIdAndType({"postID": postID, "type": type}).then((data) => {
-          this.post = data;
-        });
-        ajaxHelper.getRecentPostsByWriter({"writer": this.post.writer}).then((data) => {
-          this.recentPosts = data;
-        });
-        ajaxHelper.getUserById({"user": this.post.writer}).then((data) => {
-          this.writer = data;
+        $.ajax({
+          url: '/api/get_post',
+          dataType: 'json',
+          type: 'get',
+          scriptCharset: 'utf-8',
+          async: false,
+          data: {"postID": postID, "type": type},
+          success: function (data) {
+            _this.post = data;
+            if(type == 'SELL')
+              _this.post.id = data.cid;
+            else _this.post.id = data.messageId;
+            _this.post.tags = data.tagVOS;
+            _this.post.fileType = data.postType;
+            _this.post.writer = data.writer;
+          },
+          error: function (error) {
+          }
         });
         $('#content').append(this.post.content);
+        $.ajax({
+          url: '/api/get_recent_posts',
+          dataType: 'json',
+          type: 'get',
+          scriptCharset: 'utf-8',
+          data: {"writer": this.post.writer},
+          success: function (data) {
+           _this.recentPosts = data
+          },
+          error: function (error) {
+          }
+        });
+        $.ajax({
+          url: '/api/get_user',
+          dataType: 'json',
+          type: 'get',
+          scriptCharset: 'utf-8',
+          data: {"user": this.post.writer},
+          success: function (data) {
+            _this.writer = data;
+            _this.writer.display = (data.display) ? data.display : require('../../assets/defaultDisplay.jpg');
+          },
+          error: function (error) {
+          }
+        })
       },
       //点击缩略图更改轮播图显示
       changeCarousel(index) {
@@ -162,7 +199,9 @@
       },
       //阅读作者最近发帖
       readPost(index) {
-        window.location.href = './post.html?postId=' + this.recentPosts[index].id + '&mode=READ&' + 'type=' + this.recentPosts[index].type;
+        if(this.recentPosts[index].type == 'SELL')
+          window.location.href = './post.html?postId=' + this.recentPosts[index].cid + '&mode=READ&' + 'type=SELL';
+        else window.location.href = './post.html?postId=' + this.recentPosts[index].messageId + '&mode=READ&' + 'type=SHARE';
       },
       //审核
       check() {

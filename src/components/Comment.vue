@@ -27,10 +27,7 @@
 
   export default {
     name: "Comment",
-    props: {
-      postId: Number,
-      type: String
-    },
+    props: ['postId', 'type'],
     data() {
       return {
         commentText: '',
@@ -50,14 +47,37 @@
         ]
       }
     },
+    watch: {
+      postId: {
+        handler(newValue ,oldValue){
+          this.getComment();
+        },
+        deep: true
+      },
+      type: {
+        handler(newValue, oldValue){
+          this.getComment();
+        },
+        deep: true
+      }
+    },
     mounted: function () {
       this.getComment();
     },
     methods: {
       getComment(){
-        ajaxHelper.getCommentOf({"postId": this.postId, "type": this.type}).then((data) => {
-          this.comment = data;
-        });
+        let _this = this;
+        $.ajax({
+          url: '/api/get_comment',
+          dataType: 'json',
+          type: 'get',
+          data: {"postId": this.postId, "type": this.type},
+          success: function (data) {
+            _this.comment = data;
+          },
+          error: function (error) {
+          }
+        })
       },
       addComment() {
         var comment = {"postId": this.postId, "content": this.commentText, "type": this.type};
