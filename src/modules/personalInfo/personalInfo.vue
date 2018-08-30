@@ -359,11 +359,11 @@
           let cards3=this.addCard;
           cards3.forEach((card,index)=>{
 
-            if(card.x==="1") {
+            if(card.len==="1") {
               let nextCard = cards3[index + 1] || cards3[index - 1];
             }
           });
-          this.addCard=cards3.filter(card=>card.x!=='1');
+          this.addCard=cards3.filter(card=>card.len!=='1');
         },
         editPerInfo(username,address,email,phone,tags,head){
           this.clearCards();
@@ -386,7 +386,7 @@
             postList=data;
             for (var i=0;i<postList.length;i++){
               if(postList[i].type=='SELL')
-              this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].cid, type:postList[i].type});
+                this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].cid, type:postList[i].type});
               else
                 this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].messageId, type:postList[i].type});
 
@@ -410,13 +410,17 @@
 
 
         loadPass(){
-          var postList=new Array();
+          var postList;
           ajaxHelper.getPosts({"writer": this.personalInfomation.uid,"state":"pass"}).then((data) => {
             postList=data;
+            for (var i=0;i<postList.length;i++){
+              if(postList[i].type=='SELL')
+                this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].cid, type:postList[i].type});
+              else
+                this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].messageId, type:postList[i].type});
+
+            }
           });
-          for (var i=0;i<postList.length;i++){
-            this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].id, type:postList[i].type});
-          }
 
           //以下注释为demo
 /*          var srcList = new Array();
@@ -433,13 +437,17 @@
         },
 
         loadUnpass(){
-          var postList=new Array();
+          var postList;
           ajaxHelper.getPosts({"writer": this.personalInfomation.uid,"state":"fail"}).then((data) => {
             postList=data;
+            for (var i=0;i<postList.length;i++){
+              if(postList[i].type=='SELL')
+                this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].cid, type:postList[i].type});
+              else
+                this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].messageId, type:postList[i].type});
+
+            }
           });
-          for (var i=0;i<postList.length;i++){
-            this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].id, type:postList[i].type});
-          }
           //以下注释为demo
 /*          var srcList = new Array();
           srcList[0] = require('../../assets/service4.jpg');
@@ -459,13 +467,17 @@
         },
 
         loadHighlight(){
-          var postList=new Array();
+          var postList;
           ajaxHelper.getPosts({"writer": this.personalInfomation.uid,"state":"highlight"}).then((data) => {
             postList=data;
+            for (var i=0;i<postList.length;i++){
+              if(postList[i].type=='SELL')
+                this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].cid, type:postList[i].type});
+              else
+                this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].messageId, type:postList[i].type});
+
+            }
           });
-          for (var i=0;i<postList.length;i++){
-            this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].id, type:postList[i].type});
-          }
 
           //以下注释为demo
 /*          var srcList = new Array();
@@ -582,6 +594,7 @@
 
   .CARD{
     width: 880px;
+    margin-left: 50%;
   }
 
   #tagCloud {
