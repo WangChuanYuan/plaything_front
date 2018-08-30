@@ -24,7 +24,7 @@
             <img  :src="item.src" class="image">
             </div>
             <div v-else>
-              <video :src="this.post.video" controls="controls" style="display: block;width: 100%" width="100%">您的浏览器不支持video</video>
+              <video :src="item.video" controls="controls" style="display: block;width: 100%" width="100%">您的浏览器不支持video</video>
             </div>
             <div v-if="item.len=='1'" style="padding: 20px;">
               <span v-if="item.len=='1'">{{item.title}}</span>
@@ -147,7 +147,7 @@
               data: JSON.stringify({"kind":tn}),
               success: function (data) {
                 for(var i=0;i<data.length;i++){
-                  if(data[i].fileType==='PIC') {
+                  if(data[i].postType==='PIC') {
                     this.addCard.push({type:data[i].type, title: data[i].tilte, src: data[i].covers[0], len: '1', id: data[i].id,fileType: data[i].postType});
                   }
                   else{

@@ -124,7 +124,12 @@
 
     <el-col :span="2">
       <el-card  class="CARD" v-for="(item,index) in addCard"  v-if="item.len=='1'" :body-style="{ padding: '0px' }">
-        <img v-if="item.len=='1'" :src="item.src" class="image">
+        <div v-if="item.fileType=='PIC'">
+          <img  :src="item.src" class="image">
+        </div>
+        <div v-else>
+          <video :src="item.video" controls="controls" style="display: block;width: 100%" width="100%">您的浏览器不支持video</video>
+        </div>
         <div v-if="item.len=='1'" style="padding: 20px;">
           <span v-if="item.len=='1'">{{item.title}}</span>
           <div  style="margin-left: 50%">
@@ -210,6 +215,8 @@
             src: require('../../assets/banner1.jpg'),
             len: '0',
             id:'testID',
+            fileType:'',
+            video:null,
             type:"",
           }],
           rules: {
@@ -385,10 +392,50 @@
           ajaxHelper.getPosts({"writer": this.personalInfomation.uid,"state":"uncheck"}).then((data) => {
             postList=data;
             for (var i=0;i<postList.length;i++){
-              if(postList[i].type=='SELL')
-                this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].cid, type:postList[i].type});
-              else
-                this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].messageId, type:postList[i].type});
+              if(postList[i].type=='SELL') {
+                if(postList[i].postType=='PIC') {
+                  this.addCard.push({
+                    title: postList[i].title,
+                    src: postList[i].covers[0],
+                    len: '1',
+                    id: postList[i].cid,
+                    type: postList[i].type,
+                    fileType:'PIC'
+                  });
+                }
+                else{
+                  this.addCard.push({
+                    title: postList[i].title,
+                    video: postList[i].video,
+                    len: '1',
+                    id: postList[i].cid,
+                    type: postList[i].type,
+                    fileType:'VID'
+                  });
+                }
+              }
+              else {
+                if(postList[i].postType=='PIC') {
+                  this.addCard.push({
+                    title: postList[i].title,
+                    src: postList[i].covers[0],
+                    len: '1',
+                    id: postList[i].messageId,
+                    type: postList[i].type,
+                    fileType:'PIC'
+                  });
+                }
+                else{
+                  this.addCard.push({
+                    title: postList[i].title,
+                    video: postList[i].video,
+                    len: '1',
+                    id: postList[i].messageId,
+                    type: postList[i].type,
+                    fileType:'VID'
+                  });
+                }
+              }
 
             }
           });
@@ -414,26 +461,67 @@
           ajaxHelper.getPosts({"writer": this.personalInfomation.uid,"state":"pass"}).then((data) => {
             postList=data;
             for (var i=0;i<postList.length;i++){
-              if(postList[i].type=='SELL')
-                this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].cid, type:postList[i].type});
-              else
-                this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].messageId, type:postList[i].type});
+              if(postList[i].type=='SELL') {
+                if(postList[i].postType=='PIC') {
+                  this.addCard.push({
+                    title: postList[i].title,
+                    src: postList[i].covers[0],
+                    len: '1',
+                    id: postList[i].cid,
+                    type: postList[i].type,
+                    fileType:'PIC'
+                  });
+                }
+                else{
+                  this.addCard.push({
+                    title: postList[i].title,
+                    video: postList[i].video,
+                    len: '1',
+                    id: postList[i].cid,
+                    type: postList[i].type,
+                    fileType:'VID'
+                  });
+                }
+              }
+              else {
+                if(postList[i].postType=='PIC') {
+                  this.addCard.push({
+                    title: postList[i].title,
+                    src: postList[i].covers[0],
+                    len: '1',
+                    id: postList[i].messageId,
+                    type: postList[i].type,
+                    fileType:'PIC'
+                  });
+                }
+                else{
+                  this.addCard.push({
+                    title: postList[i].title,
+                    video: postList[i].video,
+                    len: '1',
+                    id: postList[i].messageId,
+                    type: postList[i].type,
+                    fileType:'VID'
+                  });
+                }
+              }
 
             }
           });
 
           //以下注释为demo
 /*          var srcList = new Array();
-          srcList[0] = require('../../assets/banner3.jpg');
-          srcList[1] = require('../../assets/service2.jpg');
+          srcList[0] = require('../../assets/5.mp4');
+          srcList[1] = require('../../assets/5.mp4');
           srcList[2] = require('../../assets/service1.jpg');
           var titleList = new Array();
           titleList[0] = "审核通过1";
           titleList[1] = "审核通过2";
           titleList[2] = "审核通过3";
           for (var i = 0; i < 2; i++) {
-            this.addCard.push({title: titleList[i], src: srcList[i], len: '1',id:"testID"});
+            this.addCard.push({title: titleList[i], video: srcList[i], len: '1',id:"testID",fileType:'VID',type:'SELL'});
           }*/
+/*          this.addCard.push({title: "videoTEST", video: require('../../assets/5.mp4'), len: '1',id:"testID",fileType:'VID',type:'SELL'});*/
         },
 
         loadUnpass(){
@@ -441,10 +529,50 @@
           ajaxHelper.getPosts({"writer": this.personalInfomation.uid,"state":"fail"}).then((data) => {
             postList=data;
             for (var i=0;i<postList.length;i++){
-              if(postList[i].type=='SELL')
-                this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].cid, type:postList[i].type});
-              else
-                this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].messageId, type:postList[i].type});
+              if(postList[i].type=='SELL') {
+                if(postList[i].postType=='PIC') {
+                  this.addCard.push({
+                    title: postList[i].title,
+                    src: postList[i].covers[0],
+                    len: '1',
+                    id: postList[i].cid,
+                    type: postList[i].type,
+                    fileType:'PIC'
+                  });
+                }
+                else{
+                  this.addCard.push({
+                    title: postList[i].title,
+                    video: postList[i].video,
+                    len: '1',
+                    id: postList[i].cid,
+                    type: postList[i].type,
+                    fileType:'VID'
+                  });
+                }
+              }
+              else {
+                if(postList[i].postType=='PIC') {
+                  this.addCard.push({
+                    title: postList[i].title,
+                    src: postList[i].covers[0],
+                    len: '1',
+                    id: postList[i].messageId,
+                    type: postList[i].type,
+                    fileType:'PIC'
+                  });
+                }
+                else{
+                  this.addCard.push({
+                    title: postList[i].title,
+                    video: postList[i].video,
+                    len: '1',
+                    id: postList[i].messageId,
+                    type: postList[i].type,
+                    fileType:'VID'
+                  });
+                }
+              }
 
             }
           });
@@ -471,10 +599,50 @@
           ajaxHelper.getPosts({"writer": this.personalInfomation.uid,"state":"highlight"}).then((data) => {
             postList=data;
             for (var i=0;i<postList.length;i++){
-              if(postList[i].type=='SELL')
-                this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].cid, type:postList[i].type});
-              else
-                this.addCard.push({title: postList[i].title, src: postList[i].covers[0], len: '1',id:postList[i].messageId, type:postList[i].type});
+              if(postList[i].type=='SELL') {
+                if(postList[i].postType=='PIC') {
+                  this.addCard.push({
+                    title: postList[i].title,
+                    src: postList[i].covers[0],
+                    len: '1',
+                    id: postList[i].cid,
+                    type: postList[i].type,
+                    fileType:'PIC'
+                  });
+                }
+                else{
+                  this.addCard.push({
+                    title: postList[i].title,
+                    video: postList[i].video,
+                    len: '1',
+                    id: postList[i].cid,
+                    type: postList[i].type,
+                    fileType:'VID'
+                  });
+                }
+              }
+              else {
+                if(postList[i].postType=='PIC') {
+                  this.addCard.push({
+                    title: postList[i].title,
+                    src: postList[i].covers[0],
+                    len: '1',
+                    id: postList[i].messageId,
+                    type: postList[i].type,
+                    fileType:'PIC'
+                  });
+                }
+                else{
+                  this.addCard.push({
+                    title: postList[i].title,
+                    video: postList[i].video,
+                    len: '1',
+                    id: postList[i].messageId,
+                    type: postList[i].type,
+                    fileType:'VID'
+                  });
+                }
+              }
 
             }
           });
