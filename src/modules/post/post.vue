@@ -42,9 +42,9 @@
             <hr/>
             <div v-show="mode == 'CHECK'">
               <el-radio-group v-model="checkResult">
-                <el-radio label="DENIED">不通过</el-radio>
-                <el-radio label="PERMITTED">通过</el-radio>
-                <el-radio label="RECOMMENDED">加精</el-radio>
+                <el-radio label="fail">不通过</el-radio>
+                <el-radio label="pass">通过</el-radio>
+                <el-radio label="highlight">加精</el-radio>
               </el-radio-group>
               <el-button style="margin-left: 120px" icon="el-icon-check" @click="check">提交</el-button>
             </div>
@@ -113,7 +113,7 @@
       return {
         chatRoomVisible: false,
         mode: 'READ', //默认为浏览模式
-        checkResult: 'DENIED', //审核模式下的审查状态，不通过，通过，加精
+        checkResult: 'fail', //审核模式下的审查状态，不通过，通过，加精
         post: {
           id: '',
           covers: [],
