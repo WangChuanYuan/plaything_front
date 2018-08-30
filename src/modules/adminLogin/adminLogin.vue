@@ -7,7 +7,7 @@
     <div class = "loginFrame">
 
       <!--表单组件放在外面，标签栏在里面-->
-      <el-form ref = "AccountForm" :model = "AccountForm"   rules = "rules"  class = "demo-ruleForm login-container">
+      <el-form ref = "AccountForm" :model = "AccountForm"   :rules = "rules"  class = "demo-ruleForm login-container">
 
         <div class="title">
           <el-form-item style="width: 100%; text-align: center;">
@@ -16,10 +16,10 @@
         </div>
 
         <div class = "formGroup">
-          <el-form-item  label = "账号" prop = "username" >
-            <el-input type = "text"  auto-complete = "off" placeholder = "请输入管理员账号" class = "form-control" ></el-input></el-form-item>
+          <el-form-item  label = "账号" prop = "username">
+            <el-input type = "text"  auto-complete = "off" placeholder = "请输入管理员账号" class = "form-control" v-model="AccountForm.username"></el-input></el-form-item>
           <el-form-item label = "密码" prop = "password" class = "form-inline">
-            <el-input type = "password" auto-complete = "off" placeholder = "请输入密码" class = "form-control" ></el-input></el-form-item>
+            <el-input type = "password" auto-complete = "off" placeholder = "请输入密码" class = "form-control" v-model="AccountForm.password"></el-input></el-form-item>
         </div>
 
         <div class = "formButton">
@@ -35,7 +35,7 @@
 
 <script>
   export default {
-    name: '登录',
+    name: 'adminLogin',
     data() {
       return {
         logining : false,
