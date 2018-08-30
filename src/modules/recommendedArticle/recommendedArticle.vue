@@ -20,11 +20,16 @@
       <el-row class="CARD" v-for="(item,index) in addCard"  v-if="item.len=='1'">
         <el-col :span="16" v-if="item.len=='1'">
           <el-card  v-if="item.len=='1'" :body-style="{ padding: '0px' }">
-            <img v-if="item.len=='1'" :src="item.src" class="image">
+            <div v-if="item.fileType=='PIC'">
+            <img  :src="item.src" class="image">
+            </div>
+            <div v-else>
+              <video :src="this.post.video" controls="controls" style="display: block;width: 100%" width="100%">您的浏览器不支持video</video>
+            </div>
             <div v-if="item.len=='1'" style="padding: 20px;">
               <span v-if="item.len=='1'">{{item.title}}</span>
               <div v-if="item.len=='1'" class="bottom clearfix">
-                <el-button v-if="item.len=='1'" type="text" class="button" @click="ReadArticle(item.id)">阅读全文</el-button>
+                <el-button v-if="item.len=='1'" type="text" class="button" @click="ReadArticle(item.id,item.type)">阅读全文</el-button>
               </div>
             </div>
           </el-card>
@@ -68,7 +73,10 @@
             title: "",
             src: '',
             len: '0',
-            id:'testID'
+            id:'testID',
+            fileType:'',
+            video:null,
+            type:'',
           }],
           cardIndex:0
         }
@@ -112,9 +120,8 @@
             this.showCard(tab.label);
           },
 
-          ReadArticle(id){
-            alert(id);
-            window.location.href="./readArticle.html??postID="+id;
+          ReadArticle(id,type){
+            window.location.href="./post.html??postID="+id+'&type='+type;
           },
 
           showCard(tn){
@@ -135,7 +142,12 @@
               data: JSON.stringify({"kind":tn}),
               success: function (data) {
                 for(var i=0;i<data.length;i++){
-                  this.addCard.push({title: data[i].tilte, src: data[i].src, len: '1',id:data[i].id});
+                  if(data[i].fileType==='PIC') {
+                    this.addCard.push({type:data[i].type, title: data[i].tilte, src: data[i].covers[0], len: '1', id: data[i].messageId,fileType: data[i].postType});
+                  }
+                  else{
+                    this.addCard.push({type:data[i].type, title: data[i].tilte, video:data[i].video, len: '1', id: data[i].messageId,fileType: data[i].postType});
+                  }
                 }
               },
               error: function (error) {
