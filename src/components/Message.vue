@@ -34,8 +34,6 @@
     data() {
       return {
         unsolvedContacts: {
-          "M": 22,
-          "W": 100
         },
         receiverId: null,
         timer: null

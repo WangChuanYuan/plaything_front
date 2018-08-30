@@ -10,8 +10,8 @@
           <div id="type">
             <el-form-item prop="type">
               <el-radio-group v-model="postForm.type">
-                <el-radio label="share">分享</el-radio>
-                <el-radio label="sell">销售</el-radio>
+                <el-radio label="SHARE">分享</el-radio>
+                <el-radio label="SELL">销售</el-radio>
               </el-radio-group>
             </el-form-item>
           </div>
@@ -44,7 +44,7 @@
             </el-form-item>
           </div>
           <!--标签选择-->
-          <div v-if="postForm.type == 'share'" class="tags">
+          <div v-if="postForm.type == 'SHARE'" class="tags">
             <h5>为笔记添加合适的标签</h5>
             <el-form-item prop="tags">
               <el-checkbox-group v-model="postForm.tags">
@@ -127,7 +127,7 @@
           tags: [],
           goods: [],
           price: 0,
-          type: 'share',
+          type: 'SHARE',
           content: '',
           writer: ''
         }
@@ -166,7 +166,7 @@
             model.content = this.$refs.editor.getUEContent();
             form.append("title", model.title);
 
-            if (model.type == 'share') {
+            if (model.type == 'SHARE') {
               for (var i = 0; i < model.tags.length; i++)
                 form.append("tags", model.tags[i]);
             }
