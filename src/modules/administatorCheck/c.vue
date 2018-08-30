@@ -1,9 +1,9 @@
 <template>
   <div>
     <el-container>
-      <el-header>
+<!--      <el-header>
         <Navigation></Navigation>
-      </el-header>
+      </el-header>-->
 
       <el-row>
         <el-col :span="1" style="margin-right: 15%">
