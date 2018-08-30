@@ -285,9 +285,9 @@
         confirmEdit(formName) {
 
           console.log(this.registerForm);
-          this.$refs[formName].validate((valid) => {
+          this.$refs[formName][0].validate((valid) => {
             if (valid) {
-
+              let _this = this;
               let model = this.registerForm;
               alert(model.location);
               let form = new FormData();
@@ -308,20 +308,19 @@
                 data: form,
                 success: function (data) {
                   if (data != 'FAILURE') {
-                    this.$alert('修改成功', {
+                    _this.$alert('修改成功', {
                       confirmButtonText: '确定',
                       callback: action => {
-                        sessionStorage.setItem('user', JSON.stringify(this.registerForm.userName));
                         window.location.href = '/personalInfo.html';
                       }
                     });
                   }
                   else {
-                    this.$message.error("修改失败");
+                    _this.$message.error("修改失败");
                   }
                 },
                 error: function (error) {
-                  this.$message.error("错误");
+                  _this.$message.error("错误");
                 }
               })
             } else {

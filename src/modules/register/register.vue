@@ -167,7 +167,6 @@
         this.$alert('恭喜您注册成功，您的id为：' + data, '注册成功', {
           confirmButtonText: '确定',
           callback: action => {
-            sessionStorage.setItem('user', JSON.stringify(this.registerForm.userName));
             window.location.href = '/';
           }
         });
