@@ -53,7 +53,7 @@
 <script>
   import Navigation from "../../components/Navigation";
   import Footer from "../../components/Footer";
-  import ajaxHelper from "../../assets/ajaxHelper";
+  import ajaxHelper from '../../assets/ajaxHelper';
   import $ from 'jquery';
   export default {
     name: "c",
@@ -86,26 +86,50 @@
         //清除我的笔记卡片
         let cards=this.addCard;
         cards.forEach((card,index)=>{
-
+          if(card.len==="1") {
             let nextCard = cards[index + 1] || cards[index - 1];
-
+          }
         });
-        this.addCard=cards.filter(card=>card.x!=='1');
+        this.addCard=cards.filter(card=>card.len!=='1');
       },
 
       loadUncheck(){
         var postList;
-        $.ajax({
+        ajaxHelper.receive_all_posts("WAITING").then((data) => {
+          postList=data;
+          //alert(postList.length)
+          for (var i=0;i<postList.length;i++){
+            if(postList[i].postType=='PIC'){
+              //console.log(postList[i])
+              if(postList[i].type=='SELL'){
+                this.addCard.push({type:postList[i].type,title: postList[i].tilte, src: postList[i].covers[0], len: '1', id: postList[i].cid,fileType:postList[i].postType});
+              }
+              else{
+                this.addCard.push({type:postList[i].type,title: postList[i].tilte, src: postList[i].covers[0], len: '1', id: postList[i].messageId,fileType:postList[i].postType});
+              }
+            }
+            else{
+              if(postList[i].type=='SELL'){
+                this.addCard.push({type:postList[i].type,title: postList[i].tilte, video:postList[i].video, len: '1', id: postList[i].cid,fileType: postList[i].postType});
+              }
+              else{
+                this.addCard.push({type:postList[i].type,title: postList[i].tilte, video:postList[i].video, len: '1', id: postList[i].messageId,fileType: postList[i].postType});
+              }
+            }
+          }
+        });
+        /*$.ajax({
           url:'/api/receive_all_posts',
           dataType: 'json',
           type: 'post',
           data:{"status":"WAITING"},
           success:function (data) {
+            var postList ;
             postList=data;
             //alert(postList[0].postType)
             for (var i=0;i<postList.length;i++){
               if(postList[i].postType=='PIC'){
-                console.log(postList[i])
+                //console.log(postList[i])
                 if(postList[i].type=='SELL'){
                   this.addCard.push({type:postList[i].type,title: postList[i].tilte, src: postList[i].covers[0], len: '1', id: postList[i].cid,fileType:postList[i].postType});
                 }
@@ -126,7 +150,7 @@
           error:function (error) {
             alert(error)
           }
-        })
+        })*/
         //alert(postList.length)
         //alert("yyy")
         //以下注释为demo
@@ -158,48 +182,84 @@
       },
 
       loadPass(){
-        var postList=new Array();
-        ajaxHelper.receive_all_posts({"status":"PERMITTED"}).then((data) => {
+        var postList;
+        ajaxHelper.receive_all_posts("PERMITTED").then((data) => {
           postList=data;
+          //alert(postList.length)
+          for (var i=0;i<postList.length;i++){
+            if(postList[i].postType=='PIC'){
+              //console.log(postList[i])
+              if(postList[i].type=='SELL'){
+                this.addCard.push({type:postList[i].type,title: postList[i].tilte, src: postList[i].covers[0], len: '1', id: postList[i].cid,fileType:postList[i].postType});
+              }
+              else{
+                this.addCard.push({type:postList[i].type,title: postList[i].tilte, src: postList[i].covers[0], len: '1', id: postList[i].messageId,fileType:postList[i].postType});
+              }
+            }
+            else{
+              if(postList[i].type=='SELL'){
+                this.addCard.push({type:postList[i].type,title: postList[i].tilte, video:postList[i].video, len: '1', id: postList[i].cid,fileType: postList[i].postType});
+              }
+              else{
+                this.addCard.push({type:postList[i].type,title: postList[i].tilte, video:postList[i].video, len: '1', id: postList[i].messageId,fileType: postList[i].postType});
+              }
+            }
+          }
         });
-        for (var i=0;i<postList.length;i++){
-          if(postList[i].postType=='PIC'){
-            this.addCard.push({type:postList[i].type,title: postList[i].tilte, src: postList[i].covers[0].src, len: '1', id: postList[i].id,fileType:postList[i].fileType});
-          }
-          else{
-            this.addCard.push({type:postList[i].type,title: postList[i].tilte, video:postList[i].video, len: '1', id: postList[i].id,fileType: postList[i].fileType});
-          }
-        }
       },
 
       loadUnpass(){
-        var postList=new Array();
-        ajaxHelper.receive_all_posts({"status":"DENIED"}).then((data) => {
+        var postList;
+        ajaxHelper.receive_all_posts("DENIED").then((data) => {
           postList=data;
+          //alert(postList.length)
+          for (var i=0;i<postList.length;i++){
+            if(postList[i].postType=='PIC'){
+              //console.log(postList[i])
+              if(postList[i].type=='SELL'){
+                this.addCard.push({type:postList[i].type,title: postList[i].tilte, src: postList[i].covers[0], len: '1', id: postList[i].cid,fileType:postList[i].postType});
+              }
+              else{
+                this.addCard.push({type:postList[i].type,title: postList[i].tilte, src: postList[i].covers[0], len: '1', id: postList[i].messageId,fileType:postList[i].postType});
+              }
+            }
+            else{
+              if(postList[i].type=='SELL'){
+                this.addCard.push({type:postList[i].type,title: postList[i].tilte, video:postList[i].video, len: '1', id: postList[i].cid,fileType: postList[i].postType});
+              }
+              else{
+                this.addCard.push({type:postList[i].type,title: postList[i].tilte, video:postList[i].video, len: '1', id: postList[i].messageId,fileType: postList[i].postType});
+              }
+            }
+          }
         });
-        for (var i=0;i<postList.length;i++){
-          if(postList[i].postType=='PIC'){
-            this.addCard.push({type:postList[i].type,title: postList[i].tilte, src: postList[i].covers[0].src, len: '1', id: postList[i].id,fileType:postList[i].fileType});
-          }
-          else{
-            this.addCard.push({type:postList[i].type,title: postList[i].tilte, video:postList[i].video, len: '1', id: postList[i].id,fileType: postList[i].fileType});
-          }
-        }
       },
 
       loadHighlight(){
-        var postList=new Array();
-        ajaxHelper.receive_all_posts({"status":"RECOMMENDED"}).then((data) => {
+        var postList;
+        ajaxHelper.receive_all_posts("RECOMMENDED").then((data) => {
           postList=data;
+          //alert(postList.length)
+          for (var i=0;i<postList.length;i++){
+            if(postList[i].postType=='PIC'){
+              //console.log(postList[i])
+              if(postList[i].type=='SELL'){
+                this.addCard.push({type:postList[i].type,title: postList[i].tilte, src: postList[i].covers[0], len: '1', id: postList[i].cid,fileType:postList[i].postType});
+              }
+              else{
+                this.addCard.push({type:postList[i].type,title: postList[i].tilte, src: postList[i].covers[0], len: '1', id: postList[i].messageId,fileType:postList[i].postType});
+              }
+            }
+            else{
+              if(postList[i].type=='SELL'){
+                this.addCard.push({type:postList[i].type,title: postList[i].tilte, video:postList[i].video, len: '1', id: postList[i].cid,fileType: postList[i].postType});
+              }
+              else{
+                this.addCard.push({type:postList[i].type,title: postList[i].tilte, video:postList[i].video, len: '1', id: postList[i].messageId,fileType: postList[i].postType});
+              }
+            }
+          }
         });
-        for (var i=0;i<postList.length;i++){
-          if(postList[i].postType=='PIC'){
-            this.addCard.push({type:postList[i].type,title: postList[i].tilte, src: postList[i].covers[0].src, len: '1', id: postList[i].id,fileType:postList[i].fileType});
-          }
-          else{
-            this.addCard.push({type:postList[i].type,title: postList[i].tilte, video:postList[i].video, len: '1', id: postList[i].id,fileType: postList[i].fileType});
-          }
-        }
       },
 
       handleSelect(key, keyPath) {
@@ -226,7 +286,7 @@
         }
       },
 
-/*      ReadArticle(id){
+/*     ReadArticle(id){
         window.location.href = '/post.html?postID='+id;
       },*/
     }

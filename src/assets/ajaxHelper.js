@@ -69,6 +69,24 @@ ajaxHelper.getPostByIdAndType = function (param) {
   })
 }
 
+ajaxHelper.receive_all_posts = function (param){
+  return new Promise(function (resolve, reject) {
+    $.ajax({
+      url: '/api/receive_all_posts',
+      dataType: 'json',
+      type: 'get',
+      scriptCharset: 'utf-8',
+      data:{"status":param},
+      success: function (data) {
+        resolve(data);
+      },
+      error: function (error) {
+        reject(error);
+      }
+    })
+  })
+}
+
 /**
  * 得到作者各种状态下的笔记
  * @param param {"writer": writerId,"state":state}

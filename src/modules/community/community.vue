@@ -78,7 +78,7 @@
         searchText:"",
         editableTabsValue: '1',
         editableTabs: [
-          {title: '推荐', name: '推荐', content: '',len:'1'}],
+          {title: '', name: '', content: '',len:''}],
         input: "",
         tabIndex: 2,
         addCard: [{
@@ -120,7 +120,7 @@
             }
           }
         });
-        this.showCard('0');
+        this.showCard('1');
       },
       searchPosts(){
         alert("i want show you something!")
@@ -154,7 +154,7 @@
       },
 
       ReadArticle(id){
-        window.location.href = '/post.html?postID='+id+'&type=SELL';
+        window.location.href = '/post.html?postID='+id+'&type=SHARE';
       },
       showCard(tn) {
         /*alert(tn)*/
@@ -176,10 +176,10 @@
           success: function (data) {
             for (var i = 0; i < data.length; i++) {
               if(data[i].postType=='PIC'){
-                this.addCard.push({type:data[i].type,title: data[i].tilte, src: data[i].covers[0].src, len: '1', id: data[i].id,fileType:data[i].postType});
+                this.addCard.push({type:data[i].type,title: data[i].tilte, src: data[i].covers[0].src, len: '1', id: data[i].messageId,fileType:data[i].postType});
               }
               else{
-                this.addCard.push({type:data[i].type,title: data[i].tilte, video:data[i].video, len: '1', id: data[i].id,fileType: data[i].postType});
+                this.addCard.push({type:data[i].type,title: data[i].tilte, video:data[i].video, len: '1', id: data[i].messageId,fileType: data[i].postType});
               }
             }
           },
@@ -187,7 +187,7 @@
             this.$message.error("错误");
           }
         })
-        if (tn == "0") {
+/*        if (tn == "0") {
           var srcList = new Array();
           srcList[0] = require('../../assets/5.mp4');
           srcList[1] = require('../../assets/5.mp4');
@@ -199,7 +199,7 @@
             this.addCard.video = srcList[i];
             this.addCard.push({type:'VIDEO',title: titleList[i], video: srcList[i], len: '1',id:"TESTid",fileType:'VIDEO'});
           }
-        }
+        }*/
       }
     }
   }
