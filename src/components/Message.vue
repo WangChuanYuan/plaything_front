@@ -28,9 +28,7 @@
   export default {
     name: "Message",
     components: {Talk},
-    props: {
-      usrId: Number
-    },
+    props: ['usrId'],
     data() {
       return {
         unsolvedContacts: {
