@@ -255,13 +255,18 @@
                 this.personalInfomation.email=usr.mail;
                 this.personalInfomation.phone=usr.phone;
                 this.personalInfomation.uid=usr.id;
-                //不清楚tag这里直接这样写有没有问题
-                this.personalInfomation.tags=usr.tags;
+                while(this.personalInfomation.tags.length>0){
+                  this.personalInfomation.tags.pop();
+                }
+                for(var i=0;i<usr.tags.length;i++) {
+                  this.personalInfomation.tags.push(usr.tags[i].content);
+                }
                 this.displayURL=usr.display;
+                this.perInfo.push({username:this.personalInfomation.username,address:this.personalInfomation.address,email:this.personalInfomation.email,phone:this.personalInfomation.phone,tags:this.personalInfomation.tags,x:'1',head:this.displayURL});
+
               }
             })
-            this.perInfo.push({username:this.personalInfomation.username,address:this.personalInfomation.address,email:this.personalInfomation.email,phone:this.personalInfomation.phone,tags:this.personalInfomation.tags,x:'1',head:this.displayURL});
-          },
+            },
         clickTagItem: function (tag) {
           if (this.registerForm.tags.indexOf(tag.name) < 0)
             this.registerForm.tags.push(tag.name);
@@ -270,10 +275,13 @@
           this.registerForm.tags.splice(this.registerForm.tags.indexOf(tag), 1);
         },
         confirmEdit(formName) {
+
           console.log(this.registerForm);
           this.$refs[formName].validate((valid) => {
             if (valid) {
+
               let model = this.registerForm;
+              alert(model.location);
               let form = new FormData();
               form.append("userName", model.userName);
               form.append("location", model.location);
