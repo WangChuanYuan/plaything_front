@@ -289,7 +289,6 @@
             if (valid) {
               let _this = this;
               let model = this.registerForm;
-              alert(model.location);
               let form = new FormData();
               form.append("userName", model.userName);
               form.append("location", model.location);
