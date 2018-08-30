@@ -72,7 +72,7 @@
                 </div>
               </el-col>
               <el-col :span="8" :offset="4">
-                <div v-show="postForm.type == 'sell'">
+                <div v-show="postForm.type == 'SELL'">
                   <h5>单价</h5>
                   <el-form-item prop="price">
                     <el-input v-model="postForm.price" placeholder="￥"></el-input>
