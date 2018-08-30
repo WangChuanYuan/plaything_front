@@ -78,11 +78,19 @@
         searchText:"",
         editableTabsValue: '0',
         editableTabs: [
-          {
-            title:'',
-            name:'',
-            content:''
-          }],
+          {title: '推荐', name: '推荐', content: ''},
+          {title: '美食', name: '美食', content: ''},
+          {title: '书籍', name: '书籍', content: ''},
+          {title: '母婴', name: '母婴', content: ''},
+          {title: '服饰', name: '服饰', content: ''},
+          {title: '家居', name: '家居', content: ''},
+          {title: '护肤', name: '护肤', content: ''},
+          {title: '运动', name: '运动', content: ''},
+          {title: '宠物', name: '宠物', content: ''},
+          {title: '保健品', name: '保健品', content: ''},
+          {title: '数码', name: '数码', content: ''},
+          {title: '护理', name: '护理', content: ''},
+          {title: '其他', name: '其他', content: ''}],
         input: "",
         tabIndex: 2,
         addCard: [{
@@ -108,18 +116,7 @@
     },
     methods: {
       init(){
-        var tag=[];
-        ajaxHelper.getCurrentUser().then((data) => {
-          tag=data.tags
-        });
-        this.editableTabsValue=tag.length-1
-        for (var i=0;i<tag.length;i++){
-          this.editableTabs.push({ title: tag[i],
-            name: tag[i],
-            content: '',
-            len:'1'})
-        }
-        this.showCard(tag[1]);
+        this.showCard('0');
       },
       searchPosts(){
         alert("i want show you something!")
@@ -150,7 +147,7 @@
       },
 
       showCard(tn){
-        alert(tn)
+        /*alert(tn)*/
         let cards=this.addCard;
         cards.forEach((card,index)=>{
           if(card.len==="1") {
@@ -169,7 +166,7 @@
           success: function (data) {
             alert("mall cards success!")
             for(var i=0;i<data.length;i++){
-              if(data[i].fileType=='PIC'){
+              if(data[i].postType=='PIC'){
                 this.addCard.push({type:data[i].type,title: data[i].tilte, src: data[i].covers[0].src, len: '1', id: data[i].id,fileType:data[i].postType});
               }
               else{
@@ -182,17 +179,17 @@
             this.$message.error("错误");
           }
         })
-        /*if(tn=="推荐") {
+/*        if(tn=="0") {
           var srcList = new Array();
-          srcList[0] = require('../../assets/banner1.jpg');
-          srcList[1] = require('../../assets/banner2.jpg');
-          srcList[2] = require('../../assets/banner3.jpg');
-          srcList[3] = require('../../assets/banner3.jpg');
-          srcList[4] = require('../../assets/banner3.jpg');
-          srcList[5] = require('../../assets/banner3.jpg');
-          srcList[6] = require('../../assets/banner3.jpg');
-          srcList[7] = require('../../assets/banner3.jpg');
-          srcList[8] = require('../../assets/banner3.jpg');
+          srcList[0] = require('../../assets/5.mp4');
+          srcList[1] = require('../../assets/5.mp4');
+          srcList[2] = require('../../assets/5.mp4');
+          srcList[3] = require('../../assets/5.mp4');
+          srcList[4] = require('../../assets/5.mp4');
+          srcList[5] = require('../../assets/5.mp4');
+          srcList[6] = require('../../assets/5.mp4');
+          srcList[7] = require('../../assets/5.mp4');
+          srcList[8] = require('../../assets/5.mp4');
           var titleList = new Array();
           titleList[0] = "自然1";
           titleList[1] = "自然2";
@@ -205,8 +202,8 @@
           titleList[8] = "自然3";
           for (var i = 0; i < 9; i++) {
             this.addCard.tilte = titleList[i];
-            this.addCard.src = srcList[i];
-            this.addCard.push({title: titleList[i], src: srcList[i], len: '1',id:"testID"});
+            this.addCard.video = srcList[i];
+            this.addCard.push({type:'VIDEO',title: titleList[i], video: srcList[i], len: '1',id:"TESTid",fileType:'VIDEO'});
           }
         }*/
       }
