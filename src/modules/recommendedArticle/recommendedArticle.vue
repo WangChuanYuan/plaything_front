@@ -143,10 +143,10 @@
               success: function (data) {
                 for(var i=0;i<data.length;i++){
                   if(data[i].fileType==='PIC') {
-                    this.addCard.push({type:data[i].type, title: data[i].tilte, src: data[i].covers[0], len: '1', id: data[i].messageId,fileType: data[i].postType});
+                    this.addCard.push({type:data[i].type, title: data[i].tilte, src: data[i].covers[0], len: '1', id: data[i].id,fileType: data[i].postType});
                   }
                   else{
-                    this.addCard.push({type:data[i].type, title: data[i].tilte, video:data[i].video, len: '1', id: data[i].messageId,fileType: data[i].postType});
+                    this.addCard.push({type:data[i].type, title: data[i].tilte, video:data[i].video, len: '1', id: data[i].id,fileType: data[i].postType});
                   }
                 }
               },

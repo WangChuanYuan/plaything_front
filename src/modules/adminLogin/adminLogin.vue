@@ -76,7 +76,7 @@
         console.log(this.AccountForm);
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            let model = this.registerForm;
+            let model = this.AccountForm;
             let form = new FormData();
             form.append("userName", model.username);
             form.append("password", model.password);
@@ -90,7 +90,7 @@
               data: form,
               success: function (data) {
                 if (data == 'SUCCESS') {
-                  window.location.href = '/';
+                  window.location.href = '/c.html';
 
                 }
                 else {
