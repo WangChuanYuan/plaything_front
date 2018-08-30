@@ -18,8 +18,8 @@
             <el-col :span="18">
               <el-tabs v-modle="0" class="TAG" v-model="activeName" @open="handleOpen" @close="handleClose" @tab-click="handleClick">
                 <el-tab-pane
-                  :key="item.name"
                   v-for="(item, index) in editableTabs"
+                  :key="item.name"
                   :label="item.title"
                   :name="index">
                 </el-tab-pane>
@@ -76,21 +76,9 @@
     data() {
       return {
         searchText:"",
-        editableTabsValue: '12',
+        editableTabsValue: '1',
         editableTabs: [
-          {title: '推荐', name: '推荐', content: ''},
-          {title: '美食', name: '美食', content: ''},
-          {title: '人文', name: '人文', content: ''},
-          {title: '风景', name: '风景', content: ''},
-          {title: '习俗', name: '习俗', content: ''},
-          {title: '手工', name: '手工', content: ''},
-          {title: '文化', name: '文化', content: ''},
-          {title: '服饰', name: '服饰', content: ''},
-          {title: '自然', name: '自然', content: ''},
-          {title: '科技', name: '科技', content: ''},
-          {title: '传统', name: '传统', content: ''},
-          {title: '地标', name: '地标', content: ''},
-          {title: '音乐', name: '音乐', content: ''}],
+          {title: '推荐', name: '推荐', content: '',len:'1'}],
         input: "",
         tabIndex: 2,
         addCard: [{
@@ -116,20 +104,23 @@
     },
     methods: {
       init(){
-        var tag=[];
+        var tag;
         ajaxHelper.getCurrentUser().then((data) => {
           var usr = data;
           if (usr) {
             tag=usr.tags;
+            while(this.editableTabs.length>1){
+              this.editableTabs.pop();
+            }
+            for (var i=0;i<tag.length;i++){
+              this.editableTabs.push({ title: tag[i].content,
+                name: tag[i].content,
+                content: '',
+                len:'1'})
+            }
           }
         });
-        for (var i=0;i<tag.length;i++){
-          this.editableTabs.push({ title: tag[i],
-            name: tag[i],
-            content: '',
-            len:'1'})
-        }
-        this.showCard(tag[1]);
+        this.showCard('0');
       },
       searchPosts(){
         alert("i want show you something!")
@@ -166,7 +157,7 @@
         window.location.href = '/post.html?postID='+id+'&type=SELL';
       },
       showCard(tn) {
-        alert(tn)
+        /*alert(tn)*/
         let cards = this.addCard;
         cards.forEach((card, index) => {
           if (card.len === "1") {
@@ -184,7 +175,7 @@
           data: tn,
           success: function (data) {
             for (var i = 0; i < data.length; i++) {
-              if(data[i].fileType=='PIC'){
+              if(data[i].postType=='PIC'){
                 this.addCard.push({type:data[i].type,title: data[i].tilte, src: data[i].covers[0].src, len: '1', id: data[i].id,fileType:data[i].postType});
               }
               else{
@@ -196,7 +187,7 @@
             this.$message.error("错误");
           }
         })
-/*        if (tn == "0") {
+        if (tn == "0") {
           var srcList = new Array();
           srcList[0] = require('../../assets/5.mp4');
           srcList[1] = require('../../assets/5.mp4');
@@ -208,7 +199,7 @@
             this.addCard.video = srcList[i];
             this.addCard.push({type:'VIDEO',title: titleList[i], video: srcList[i], len: '1',id:"TESTid",fileType:'VIDEO'});
           }
-        }*/
+        }
       }
     }
   }
