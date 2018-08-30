@@ -34,8 +34,6 @@
     data() {
       return {
         unsolvedContacts: {
-          "M": 22,
-          "W": 100
         },
         receiverId: null,
         timer: null
@@ -49,56 +47,17 @@
     },
     methods: {
       getUnsolvedContacts(){
-        // $.ajax({
-        //   url: '/api/get_unsolved_contacts',
-        //   dataType: 'json',
-        //   type: 'get',
-        //   scriptCharset: 'utf-8',
-        //   success: function (data) {
-        //     this.unsolvedContacts = data;
-        //   },
-        //   error: function (error) {
-        //   }
-        // });
         ajaxHelper.getUnsolvedContacts().then((data) => {
           this.unsolvedContacts = data;
         });
       },
       displayOf(usrId) {
-        // $.ajax({
-        //   url: '/api/get_user',
-        //   dataType: 'json',
-        //   type: 'get',
-        //   scriptCharset: 'utf-8',
-        //   contentType: "application/json",
-        //   data: JSON.stringify({"user": usrId}),
-        //   success: function (data) {
-        //     let usr = data;
-        //     return usr.display ? usr.display : require('../assets/defaultDisplay.jpg');
-        //   },
-        //   error: function (error) {
-        //   }
-        // });
         ajaxHelper.getUserById({"user": usrId}).then((data) => {
           let usr = data;
           return usr.display ? usr.display : require('../assets/defaultDisplay.jpg');
         });
       },
       nameOf(usrId) {
-        // $.ajax({
-        //   url: '/api/get_user',
-        //   dataType: 'json',
-        //   type: 'get',
-        //   scriptCharset: 'utf-8',
-        //   contentType: "application/json",
-        //   data: JSON.stringify({"user": usrId}),
-        //   success: function (data) {
-        //     let usr = data;
-        //     return usr.userName;
-        //   },
-        //   error: function (error) {
-        //   }
-        // });
         ajaxHelper.getUserById({"user": usrId}).then((data) => {
           let usr = data;
           return usr.userName;
