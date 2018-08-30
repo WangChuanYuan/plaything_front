@@ -158,7 +158,7 @@
             this.usrId = null;
             this.hasLogin = false;
           })
-          window.location.href = './login.html';
+          window.location.href = './';
         }).catch(() => {
         });
       }
