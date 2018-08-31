@@ -100,7 +100,7 @@
                     content: '',
                     len:'1'})
                 }
-                this.showCard(tag[0]);
+                this.showCard(tag[0].content);
               }
             });
 /*            let tabs=this.editableTabs;
@@ -144,8 +144,9 @@
               contentType: false,
               dataType: 'json',
               type: 'post',
-              data: JSON.stringify({"kind":tn}),
+              data: {"kind":tn},
               success: function (data) {
+                alert(1)
                 for(var i=0;i<data.length;i++){
                   if(data[i].postType==='PIC') {
                     this.addCard.push({type:data[i].type, title: data[i].tilte, src: data[i].covers[0], len: '1', id: data[i].id,fileType: data[i].postType});
