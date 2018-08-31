@@ -40,7 +40,8 @@
         content: '',
         //轮询获取新的消息
         timer: null,
-        talks: [] //{senderId: 'M', receiverId: 'W', content: '在!', time: '2018-07-30 11:20:12'}
+        talks: [], //{senderId: 'M', receiverId: 'W', content: '在!', time: '2018-07-30 11:20:12'}
+        size: 0
       }
     },
     watch: {
@@ -59,7 +60,10 @@
       clearInterval(this.timer);
     },
     updated() {
-      this.scrollToBottom();
+      if(this.talks.length > this.size){
+        this.size = this.talks.length;
+        this.scrollToBottom();
+      }
     },
     methods: {
       init() {
@@ -110,12 +114,12 @@
       },
       showTime(index) {
         //上一次发送时间1分钟以内的不再显示发送时间
-        if (index > 0) {
-          var sendTime = new Date(this.talks[index].time);
-          sendTime.setMinutes(sendTime.getMinutes() + 1);
-          var lastSendTime = new Date(this.talks[index - 1].time);
-          return sendTime <= lastSendTime;
-        }
+        // if (index > 0) {
+        //   var sendTime = new Date(this.talks[index].time);
+        //   sendTime.setMinutes(sendTime.getMinutes() + 1);
+        //   var lastSendTime = new Date(this.talks[index - 1].time);
+        //   return sendTime <= lastSendTime;
+        // }
         return true;
       },
       scrollToBottom() {
