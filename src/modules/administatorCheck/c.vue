@@ -35,7 +35,7 @@
             <div v-if="item.len=='1'" style="padding: 20px;">
               <span v-if="item.len=='1'">{{item.title}}</span>
               <div style="top: initial">
-                <el-button v-if="item.len=='1'"  type="text" class="button" @click="checkPost(item.id)" style="font-size: large">审核文章</el-button>
+                <el-button v-if="item.len=='1'"  type="text" class="button" @click="checkPost(item.id,item.type)" style="font-size: large">审核文章</el-button>
               </div>
             </div>
           </el-card>
@@ -72,8 +72,8 @@
       };
     },
     methods: {
-      checkPost(id){
-        window.location.href = '/post.html?postID='+id+'&mode=check';
+      checkPost(id,type){
+        window.location.href = '/post.html?postID='+id+'&type='+type+'&mode=CHECK';
       },
       handleOpen(key, keyPath) {
         console.log(key, keyPath);

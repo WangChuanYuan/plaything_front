@@ -116,7 +116,7 @@
     },
     methods: {
       init(){
-        this.showCard('0');
+        this.showCard('推荐');
       },
       handleOpen(key, keyPath) {
         console.log(key, keyPath);
