@@ -126,7 +126,7 @@
           },
 
           ReadArticle(id,type){
-            window.location.href="./post.html??postID="+id+'&type='+type;
+            window.location.href="./post.html?postID="+id+'&type='+type;
           },
 
           showCard(tn){
@@ -137,7 +137,7 @@
               }
             });
             this.addCard=cards.filter(card=>card.len!=='1');
-            $.ajax({
+/*            $.ajax({
               url: '/api/showArticle',
               processData: false,
               cache: false,
@@ -159,7 +159,19 @@
               error: function (error) {
                 this.$message.error("错误");
               }
-            })
+            })*/
+
+            ajaxHelper.getArticle({"kind": tn}).then((data) =>{
+              for(var i=0;i<data.length;i++){
+                if(data[i].postType=='PIC'){
+                  this.addCard.push({type:data[i].type, title: data[i].title, src: data[i].covers[0], len: '1', id: data[i].id,fileType: data[i].postType});
+                }
+                else{
+                  this.addCard.push({type:data[i].type, title: data[i].title, video:data[i].video, len: '1', id: data[i].id,fileType: data[i].postType});
+                }
+              }
+            });
+
 /*            if(tn=="自然") {
               var srcList = new Array();
               srcList[0] = require('../../assets/banner1.jpg');
