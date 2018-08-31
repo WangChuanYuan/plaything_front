@@ -71,7 +71,13 @@
         }],
       };
     },
+    created:function(){
+      this.init()
+    },
     methods: {
+      init(){
+        this.handleSelect("2-1")
+      },
       checkPost(id,type){
         window.location.href = '/post.html?postID='+id+'&type='+type+'&mode=CHECK';
       },
