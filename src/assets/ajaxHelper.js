@@ -457,6 +457,29 @@ ajaxHelper.shareComment = function (param) {
 }
 
 /**
+ * 得到一期一会文章
+ * @param param{"kind":kind}
+ * @return article[]
+ */
+ajaxHelper.getArticle = function (param) {
+  return new Promise(function (resolve, reject) {
+    $.ajax({
+      url: '/api/showArticle',
+      dataType: 'json',
+      type: 'get',
+      scriptCharset: 'utf-8',
+      data: param,
+      success: function (data) {
+        resolve(data);
+      },
+      error: function (error) {
+        reject(error);
+      }
+    })
+  })
+}
+
+/**
  * 得到某篇笔记的评论
  * @param param {"postId": postId}
  * @returns {Promise<any>}
