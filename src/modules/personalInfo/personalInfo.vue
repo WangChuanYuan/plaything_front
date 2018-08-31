@@ -269,6 +269,10 @@
                 for(var i=0;i<usr.tags.length;i++) {
                   this.personalInfomation.tags.push(usr.tags[i].content);
                 }
+                if(!usr.display){
+                  this.displayURL=require('../../assets/defaultDisplay.jpg');
+                }
+                else
                 this.displayURL=usr.display;
                 this.perInfo.push({username:this.personalInfomation.username,address:this.personalInfomation.address,email:this.personalInfomation.email,phone:this.personalInfomation.phone,tags:this.personalInfomation.tags,x:'1',head:this.displayURL});
 
@@ -338,7 +342,8 @@
         addDisplay(file, fileList) {
           this.displayURL=file.url;
           this.personalInfomation.head = file.url;
-          this.personalInfomation.avatar = file.raw;
+          this.personalInfomation.avatar=file.raw;
+          this.registerForm.avatar = file.raw;
         },
 
         clearCards(){
