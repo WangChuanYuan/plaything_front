@@ -68,6 +68,74 @@ ajaxHelper.getPostByIdAndType = function (param) {
     })
   })
 }
+/**
+ *
+ * @param param
+ * @returns {Promise<any>}
+ */
+ajaxHelper.receive_posts = function(param){
+  return new Promise(function (resolve,reject) {
+    $.ajax({
+      url: '/api/receive_posts',
+      dataType: 'json',
+      type: 'get',
+      scriptCharset: 'utf-8',
+      data:{"tag":param},
+      success: function (data) {
+        resolve(data);
+      },
+      error: function (error) {
+        reject(error);
+      }
+    })
+  })
+}
+
+/**
+ *
+ * @param param
+ * @returns {Promise<any>}
+ */
+ajaxHelper.receive_commodities = function(param){
+  return new Promise(function (resolve,reject) {
+    $.ajax({
+      url: '/api/receive_commodities',
+      dataType: 'json',
+      type: 'get',
+      scriptCharset: 'utf-8',
+      data:{"tag":param},
+      success: function (data) {
+        resolve(data);
+      },
+      error: function (error) {
+        reject(error);
+      }
+    })
+  })
+}
+
+/**
+ * 按笔记状态获取所有的笔记，用于管理员页面
+ * @param param
+ * @returns {Promise<any>}
+ */
+ajaxHelper.receive_all_posts = function (param){
+  return new Promise(function (resolve, reject) {
+    $.ajax({
+      url: '/api/receive_all_posts',
+      dataType: 'json',
+      type: 'get',
+      scriptCharset: 'utf-8',
+      data:{"status":param},
+      success: function (data) {
+        resolve(data);
+      },
+      error: function (error) {
+        reject(error);
+      }
+    })
+  })
+}
 
 /**
  * 得到作者各种状态下的笔记
