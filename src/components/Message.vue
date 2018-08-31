@@ -5,7 +5,7 @@
         <el-scrollbar>
           <ul>
             <li class="clearfix contact" v-for="(item, key) in unsolvedContacts" style="margin-top: 8px"
-                @click="startTalk(key)">
+                @click="startTalk(key)" v-if="item>0">
               <img :src="displayOf(key)" class="display">
               <span style="text-align: center; display: block">{{nameOf(key)}}</span>
               <el-badge :value="item" :max="99"></el-badge>
@@ -34,7 +34,7 @@
         unsolvedContacts: {
         },
         receiverId: null,
-        timer: null
+        timer: null,
       }
     },
     mounted: function () {
@@ -50,16 +50,40 @@
         });
       },
       displayOf(usrId) {
-        ajaxHelper.getUserById({"user": usrId}).then((data) => {
-          let usr = data;
-          return usr.display ? usr.display : require('../assets/defaultDisplay.jpg');
-        });
+        var display = null;
+        $.ajax({
+          url: '/api/get_user',
+          dataType: 'json',
+          type: 'get',
+          scriptCharset: 'utf-8',
+          async: false,
+          data: {"user": usrId},
+          success: function (data) {
+            let usr = data;
+            display = usr.display ? usr.display : require('../assets/defaultDisplay.jpg');
+          },
+          error: function (error) {
+          }
+        })
+        return display;
       },
       nameOf(usrId) {
-        ajaxHelper.getUserById({"user": usrId}).then((data) => {
-          let usr = data;
-          return usr.userName;
-        });
+        var userName = null;
+        $.ajax({
+          url: '/api/get_user',
+          dataType: 'json',
+          type: 'get',
+          scriptCharset: 'utf-8',
+          async: false,
+          data: {"user": usrId},
+          success: function (data) {
+            let usr = data;
+            userName = usr.userName;
+          },
+          error: function (error) {
+          }
+        })
+        return userName;
       },
       startTalk(receiverId) {
         this.receiverId = receiverId;

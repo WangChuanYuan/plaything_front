@@ -156,10 +156,14 @@
           data: {"postID": postID, "type": type},
           success: function (data) {
             _this.post = data;
-            if(type == 'SELL')
+            if(type == 'SELL'){
               _this.post.id = data.cid;
-            else _this.post.id = data.messageId;
-            _this.post.tags = data.tagVOS;
+              _this.post.tags = data.tagVOS;
+            }
+            else {
+              _this.post.id = data.messageId;
+              _this.post.tags = data.tags;
+            }
             _this.post.fileType = data.postType;
             _this.post.writer = data.writer;
           },
@@ -217,13 +221,13 @@
 <style scoped>
   #cover {
     top: 100px;
-    left: 300px;
+    left: 250px;
     position: absolute;
   }
 
   #article {
     top: 800px;
-    left: 300px;
+    left: 250px;
     width: 500px;
     position: absolute;
   }
