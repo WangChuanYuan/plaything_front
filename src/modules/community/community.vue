@@ -16,7 +16,7 @@
               </div>
             </el-col>
             <el-col :span="18">
-              <el-tabs v-modle="0" class="TAG" v-model="activeName" @open="handleOpen" @close="handleClose" @tab-click="handleClick">
+              <el-tabs class="TAG"  @open="handleOpen" @close="handleClose" @tab-click="handleClick">
                 <el-tab-pane
                   v-for="(item, index) in editableTabs"
                   :key="item.name"
@@ -35,14 +35,14 @@
 
         <!--卡片-->
         <div class="CardContainer" style="margin-left: 25px">
-          <el-col class="CARDS" v-for="(item,index) in addCard"  v-if="item.len=='1'">
+          <el-col class="CARDS" v-for="(item) in addCard"  v-if="item.len=='1'">
             <el-row :span="4" v-if="item.len=='1'" style="padding: 10px">
               <el-card class="card" v-if="item.len=='1'" :body-style="{ padding: '0px'}" shadow="hover">
                 <div v-if="item.fileType=='PIC'">
                   <img v-if="item.len=='1'" :src="item.src" class="image" height="250px">
                 </div>
                 <div v-else>
-                  <video :src="item.video" controls="controls" style="display: block;width: 100%" height="250px">您的浏览器不支持video</video>
+                  <video v-if="item.len=='1'" :src="item.video" controls="controls" style="display: block;width: 100%" height="250px">您的浏览器不支持video</video>
                 </div>
                 <div v-if="item.len=='1'" style="padding: 0px;">
                   <span>&nbsp;&nbsp;&nbsp;</span>
@@ -69,7 +69,6 @@
   import Navigation from "../../components/Navigation";
   import Footer from "../../components/Footer";
   import ajaxHelper from  "../../assets/ajaxHelper";
-  import $ from 'jquery';
   export default {
     name: "community",
     components: {Footer, Navigation},
@@ -118,9 +117,9 @@
                 content: '',
                 len:'1'})
             }
+            this.showCard(tag[0].content);
           }
         });
-        this.showCard('1');
       },
       searchPosts(){
         alert("i want show you something!")
@@ -150,14 +149,14 @@
         console.log(key, keyPath);
       },
       handleClick(tab,event){
-        this.showCard(tab.name)
+        this.showCard(tab.label)
       },
 
       ReadArticle(id){
         window.location.href = '/post.html?postID='+id+'&type=SHARE';
       },
       showCard(tn) {
-        /*alert(tn)*/
+        //alert("success0")
         let cards = this.addCard;
         cards.forEach((card, index) => {
           if (card.len === "1") {
@@ -165,7 +164,23 @@
           }
         });
         this.addCard = cards.filter(card => card.len !== '1');
-        $.ajax({
+        var postList;
+        ajaxHelper.receive_posts(tn).then((data) => {
+          postList = data;
+          //alert(postList.length)
+          //alert("success1")
+          for (var i = 0; i < postList.length; i++) {
+            if(data[i].postType=='PIC'){
+              //alert("success2")
+              this.addCard.push({type:postList[i].type,title: postList[i].tilte, src: postList[i].covers[0], len: '1', id: postList[i].messageId,fileType:postList[i].postType});
+            }
+            else{
+              //alert("success2")
+              this.addCard.push({type:postList[i].type,title: postList[i].tilte, video:postList[i].video, len: '1', id: postList[i].messageId,fileType: postList[i].postType});
+            }
+          }
+        });
+        /*$.ajax({
           url: '/api/receive_posts',
           processData: false,
           cache: false,
@@ -186,8 +201,8 @@
           error: function (error) {
             this.$message.error("错误");
           }
-        })
-/*        if (tn == "0") {
+        })*/
+/*        if (tn == "传统") {
           var srcList = new Array();
           srcList[0] = require('../../assets/5.mp4');
           srcList[1] = require('../../assets/5.mp4');

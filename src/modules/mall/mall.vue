@@ -16,7 +16,7 @@
               </div>
             </el-col>
             <el-col :span="18">
-              <el-tabs v-modle="0" class="TAG" v-model="activeName" @open="handleOpen" @close="handleClose" @tab-click="handleClick">
+              <el-tabs class="TAG"  @open="handleOpen" @close="handleClose" @tab-click="handleClick">
                 <el-tab-pane
                   :key="item.name"
                   v-for="(item, index) in editableTabs"
@@ -35,7 +35,7 @@
 
         <!--卡片-->
         <div class="CardContainer" style="margin-left: 25px">
-          <el-col class="CARDS" v-for="(item,index) in addCard"  v-if="item.len=='1'">
+          <el-col class="CARDS" v-for="(item) in addCard"  v-if="item.len=='1'">
             <el-row :span="4" v-if="item.len=='1'" style="padding: 10px">
               <el-card class="card" v-if="item.len=='1'" :body-style="{ padding: '0px'}" shadow="hover">
                 <div v-if="item.fileType=='PIC'">
@@ -118,6 +118,12 @@
       init(){
         this.showCard('0');
       },
+      handleOpen(key, keyPath) {
+        console.log(key, keyPath);
+      },
+      handleClose(key, keyPath) {
+        console.log(key, keyPath);
+      },
       searchPosts(){
         alert("i want show you something!")
         /*ajaxHelper.get_recent_posts(this.searchText).then((data)=>{
@@ -140,7 +146,7 @@
         }
       },
       handleClick(tab,event){
-        this.showCard(tab.name)
+        this.showCard(tab.label)
       },
       ReadArticle(id){
         window.location.href = '/post.html?postID='+id+'&type=SELL';
@@ -155,7 +161,23 @@
           }
         });
         this.addCard=cards.filter(card=>card.len!=='1');
-        $.ajax({
+        var postList;
+        ajaxHelper.receive_commodities(tn).then((data) => {
+          postList = data;
+          //alert(postList.length)
+          //alert("success1")
+          for (var i = 0; i < postList.length; i++) {
+            if(data[i].postType=='PIC'){
+              //alert("success2")
+              this.addCard.push({type:postList[i].type,title: postList[i].tilte, src: postList[i].covers[0], len: '1', id: postList[i].cid,fileType:postList[i].postType});
+            }
+            else{
+              //alert("success2")
+              this.addCard.push({type:postList[i].type,title: postList[i].tilte, video:postList[i].video, len: '1', id: postList[i].cid,fileType: postList[i].postType});
+            }
+          }
+        });
+        /*$.ajax({
           url: '/api/receive_commodities',
           processData: false,
           cache: false,
@@ -178,7 +200,7 @@
           error: function (error) {
             this.$message.error("错误");
           }
-        })
+        })*/
 /*        if(tn=="0") {
           var srcList = new Array();
           srcList[0] = require('../../assets/5.mp4');
