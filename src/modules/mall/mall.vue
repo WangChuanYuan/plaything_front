@@ -125,7 +125,8 @@
         console.log(key, keyPath);
       },
       searchPosts(){
-        alert("i want show you something!")
+        //alert("i want show you something!")
+        this.showCard(this.searchText)
         /*ajaxHelper.get_recent_posts(this.searchText).then((data)=>{
           var posts = data
           if(posts){
@@ -133,7 +134,7 @@
           }
         })*/
       },
-      showSearchedCards(posts){
+/*      showSearchedCards(posts){
         let cards=this.addCard;
         cards.forEach((card,index)=>{
           if(card.len==="1") {
@@ -144,7 +145,7 @@
         for(var i=0;i<posts.length;i++){
           this.addCard.push({title: posts[i].tilte, src: posts[i].src, len: '1',id:posts[i].id});
         }
-      },
+      },*/
       handleClick(tab,event){
         this.showCard(tab.label)
       },
